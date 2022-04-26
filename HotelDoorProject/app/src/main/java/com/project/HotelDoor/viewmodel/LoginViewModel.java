@@ -2,6 +2,7 @@ package com.project.HotelDoor.viewmodel;
 
 import android.app.Activity;
 import android.app.Application;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,5 +27,9 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void setSignInPressed(Boolean isSignInPressed) {
         userRepository.setSignInPressed(isSignInPressed);
+    }
+
+    public void forgotPassword(View view){
+        userRepository.forgotPassword(view);
     }
 }
