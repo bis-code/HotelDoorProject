@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "273541997299",
+    "firebase_url": "https://hotel-door-project-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "hotel-door-project",
+    "storage_bucket": "hotel-door-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273541997299:android:0fdc76b107b208f45a0d86",
+        "android_client_info": {
+          "package_name": "com.project.HotelDoor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273541997299-gu933nplfjde13eqou1ag48kkjvc6d6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEc2I11CfXG4TchAoml2gYdvkqFUhnVxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273541997299-gu933nplfjde13eqou1ag48kkjvc6d6l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

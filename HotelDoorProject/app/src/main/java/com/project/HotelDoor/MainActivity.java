@@ -1,8 +1,9 @@
 package com.project.HotelDoor;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -10,12 +11,19 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.project.HotelDoor.viewmodel.MainActivityViewModel;
 
-public class MainActivity extends AppCompatActivity implements RegisterFragment.FragmentAListener {
+public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
-    private RegisterFragment registerFragment;
-    private MainPageFragment mainPageFragment;
+    BottomAppBar bottomAppBar;
+    FloatingActionButton floatingPlus;
+    FragmentTransaction fragmentTransaction;
+
+    private final RegisterFragment registerFragment = new RegisterFragment();
+    private final MainPageFragment mainPageFragment = new MainPageFragment();
     ProgressBar progressBar;
     private MainActivityViewModel viewmodel;
 
@@ -23,25 +31,32 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewmodel = new ViewModelProvider(this).get(MainActivityViewModel.class);
-        viewmodel.init();
-        checkIfSignIn();
         setContentView(R.layout.activity_main);
 
         //showing bottom navigation view
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
         bottomNavigationView.getMenu().getItem(2).setEnabled(false);
-        progressBar = findViewById(R.id.progress_bar);
+        bottomAppBar = findViewById(R.id.bottomAppBar);
+        floatingPlus = findViewById(R.id.floatingPlus);
 
-        //setting fragments
-        registerFragment = new RegisterFragment();
-        mainPageFragment = new MainPageFragment();
+        progressBar = findViewById(R.id.progress_bar);
 
         viewmodel.getProgressBar().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoading) {
                 int visibility = isLoading ? View.VISIBLE : View.INVISIBLE;
                 progressBar.setVisibility(visibility);
+            }
+        });
+
+        viewmodel.getCurrentUser().observe(this, user -> {
+            if(user != null) {
+                viewmodel.init(user);
+                makeBottomNavVisible(true);
+            }
+            else{
+               makeBottomNavVisible(false);
             }
         });
 
@@ -53,38 +68,43 @@ public class MainActivity extends AppCompatActivity implements RegisterFragment.
         });
     }
 
-    @Override
-    public void onRegisterAccount(String email, String password) {
-        viewmodel.onRegisterAccount(MainActivity.this, email, password);
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
-    }
-
-    private void checkIfSignIn()
-    {
-        viewmodel.getCurrentUser().observe(this, user -> {
-            if(user != null)
-            {
-                startMainPageActivity();
-            }
-            else {
-                startRegisterActivity();
-            }
-        });
-    }
 
     private void startRegisterActivity()
     {
-        getSupportFragmentManager().beginTransaction().
-                replace(R.id.registerFragment, registerFragment).commit();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainPageFragment);
+        if(fragment != null) {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.remove(fragment);
+            fragmentTransaction.commit();
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.registerFragment,registerFragment).commit();
     }
 
-    private void startMainPageActivity()
+    private void startMainPageActivity() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.registerFragment);
+        if(fragment != null)
+        {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.remove(fragment);
+            fragmentTransaction.commit();
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainPageFragment, mainPageFragment).commit();
+    }
+
+    public void makeBottomNavVisible(boolean visible)
     {
-        getSupportFragmentManager().beginTransaction().
-                replace(R.id.mainPageFragment, mainPageFragment).commit();
+        if(visible)
+        {
+            startMainPageActivity();
+            bottomNavigationView.setVisibility(View.VISIBLE);
+            bottomAppBar.setVisibility(View.VISIBLE);
+            floatingPlus.setVisibility(View.VISIBLE);
+        }
+        else{
+            startRegisterActivity();
+            bottomNavigationView.setVisibility(View.INVISIBLE);
+            bottomAppBar.setVisibility(View.INVISIBLE);
+            floatingPlus.setVisibility(View.INVISIBLE);
+        }
     }
 }

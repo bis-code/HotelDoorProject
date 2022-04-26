@@ -1,13 +1,13 @@
 package com.project.HotelDoor;
 
-import androidx.lifecycle.ViewModelProvider;
-
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +16,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.project.HotelDoor.viewmodel.RegisterViewModel;
+
 public class RegisterFragment extends Fragment {
 
-    private FragmentAListener listener;
-
+    private RegisterViewModel registerViewModel;
 
     //functionality
     EditText inputEmail;
@@ -29,13 +30,8 @@ public class RegisterFragment extends Fragment {
     TextView forgotPassword;
 
 
-
     public static RegisterFragment newInstance() {
         return new RegisterFragment();
-    }
-
-    public interface FragmentAListener {
-        void onRegisterAccount(String email, String password);
     }
 
     @Nullable
@@ -49,15 +45,6 @@ public class RegisterFragment extends Fragment {
         registerButton = view.findViewById(R.id.registerButton);
         toLoginButton = view.findViewById(R.id.toLoginButton);
         forgotPassword = view.findViewById(R.id.forgotPassword);
-
-        toLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                listener.onRegisterAccount(inputEmail.getText().toString(),
-                                            inputPassword.getText().toString());
-            }
-        });
         return view;
     }
 
@@ -65,26 +52,18 @@ public class RegisterFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // TODO: Use the ViewModel
-    }
+        registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if(context instanceof FragmentAListener)
-        {
-            listener = (FragmentAListener) context;
+        if (registerButton != null) {
+            registerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getView() != null) {
+                        registerViewModel.registerAccount((Activity) getView().getContext(), inputEmail.getText().toString(),
+                                inputPassword.getText().toString());
+                    }
+                }
+            });
         }
-        else{
-            throw new RuntimeException(context.toString() +
-                    " must implement FragmentAListener");
-
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
     }
 }

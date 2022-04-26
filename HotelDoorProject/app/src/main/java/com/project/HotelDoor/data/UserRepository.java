@@ -31,6 +31,9 @@ public class UserRepository {
     private MutableLiveData<String> authenticationMessage = new MutableLiveData<>("");
     private MutableLiveData<Boolean> progressBar = new MutableLiveData<>(false);
 
+    //sign out
+    private MutableLiveData<Boolean> signOut = new MutableLiveData<>(false);
+
     //Authentication
     private FirebaseAuth firebaseAuth;
 
@@ -62,8 +65,13 @@ public class UserRepository {
         return currentUser;
     }
 
+    public LiveData<Boolean> getSignOut() {
+         return signOut;
+    }
+
     public void signOut() {
         AuthUI.getInstance().signOut(app.getApplicationContext());
+        signOut.setValue(true);
     }
 
     public void registerAccount(Activity activity, String email, String password) {
@@ -86,6 +94,7 @@ public class UserRepository {
                                 }
                             }
                         });
+                signOut.postValue(false);
                 progressBar.postValue(false);
             }
         },3000);

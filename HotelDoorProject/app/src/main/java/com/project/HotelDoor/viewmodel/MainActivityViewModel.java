@@ -1,4 +1,4 @@
-package com.project.HotelDoor;
+package com.project.HotelDoor.viewmodel;
 
 import android.app.Activity;
 import android.app.Application;
@@ -19,9 +19,9 @@ public class MainActivityViewModel extends AndroidViewModel {
         userRepository = UserRepository.getInstance(app);
     }
 
-    public void init()
+    public void init(FirebaseUser user)
     {
-        String userId = userRepository.getCurrentUser().getValue().getUid();
+        String userId = user.getUid();
         //TODO: feature init functions for reviewRepository and so on...
     }
 
@@ -40,6 +40,9 @@ public class MainActivityViewModel extends AndroidViewModel {
         return userRepository.getProgressBar();
     }
 
+    public LiveData<Boolean> getSignOut() {
+        return userRepository.getSignOut();
+    }
     public void signOut()
     {
         userRepository.signOut();
