@@ -14,16 +14,20 @@ import android.widget.Toast;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.project.HotelDoor.data.Stage;
 import com.project.HotelDoor.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity {
+    private Stage stage;
+
     BottomNavigationView bottomNavigationView;
     BottomAppBar bottomAppBar;
     FloatingActionButton floatingPlus;
-    FragmentTransaction fragmentTransaction;
 
     private final RegisterFragment registerFragment = new RegisterFragment();
     private final MainPageFragment mainPageFragment = new MainPageFragment();
+    private final LoginFragment loginFragment = new LoginFragment();
+
     ProgressBar progressBar;
     private MainActivityViewModel viewmodel;
 
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         viewmodel = new ViewModelProvider(this).get(MainActivityViewModel.class);
         setContentView(R.layout.activity_main);
 
+        stage = new Stage();
         //showing bottom navigation view
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
@@ -53,10 +58,12 @@ public class MainActivity extends AppCompatActivity {
         viewmodel.getCurrentUser().observe(this, user -> {
             if(user != null) {
                 viewmodel.init(user);
-                makeBottomNavVisible(true);
+                stage.setStage("main");
+                startActivity();
             }
             else{
-               makeBottomNavVisible(false);
+                stage.setStage("register");
+                startActivity();
             }
         });
 
@@ -66,42 +73,103 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
+
+        viewmodel.getSignInPressed().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isSignInPressed) {
+                if(isSignInPressed)
+                {
+                    stage.setStage("login");
+                    startActivity();
+                }
+                else {
+                    if(stage.getPreviousStage() != null)
+                    {
+                        stage.setStage("register");
+                        startActivity();
+
+                    }
+                }
+            }
+        });
     }
 
-
-    private void startRegisterActivity()
+    private void startActivity()
     {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainPageFragment);
-        if(fragment != null) {
-            fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.remove(fragment);
-            fragmentTransaction.commit();
+        if(stage.getPreviousStage() != null)
+        {
+            removeActivity(stage.getPreviousStage());
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.registerFragment,registerFragment).commit();
+        switch (stage.getStage())
+        {
+            case "main" : {
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainPageFragment, mainPageFragment).commit();
+                stage.setPreviousStage("main");
+                makeBottomNavVisible(true);
+                break;
+            }
+            case "register": {
+                getSupportFragmentManager().beginTransaction().replace(R.id.registerFragment, registerFragment).commit();
+                stage.setPreviousStage("register");
+                makeBottomNavVisible(false);
+                break;
+            }
+            case "login" : {
+                getSupportFragmentManager().beginTransaction().replace(R.id.loginFragment, loginFragment).commit();
+                stage.setPreviousStage("login");
+                makeBottomNavVisible(false);
+                break;
+            }
+            default:
+        }
     }
 
-    private void startMainPageActivity() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.registerFragment);
-        if(fragment != null)
+    private void removeActivity(String previousStage)
+    {
+        Fragment fragment;
+        FragmentTransaction fragmentTransaction;
+        switch (previousStage)
         {
-            fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.remove(fragment);
-            fragmentTransaction.commit();
+            case "main" : {
+                fragment = getSupportFragmentManager().findFragmentById(R.id.mainPageFragment);
+                if(fragment != null) {
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                }
+                break;
+            }
+            case "register" : {
+                fragment = getSupportFragmentManager().findFragmentById(R.id.registerFragment);
+                if(fragment != null) {
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                }
+                break;
+            }
+            case "login" : {
+                fragment = getSupportFragmentManager().findFragmentById(R.id.loginFragment);
+                if(fragment != null) {
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                }
+                break;
+            }
+            default:
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainPageFragment, mainPageFragment).commit();
     }
 
     public void makeBottomNavVisible(boolean visible)
     {
         if(visible)
         {
-            startMainPageActivity();
             bottomNavigationView.setVisibility(View.VISIBLE);
             bottomAppBar.setVisibility(View.VISIBLE);
             floatingPlus.setVisibility(View.VISIBLE);
         }
         else{
-            startRegisterActivity();
             bottomNavigationView.setVisibility(View.INVISIBLE);
             bottomAppBar.setVisibility(View.INVISIBLE);
             floatingPlus.setVisibility(View.INVISIBLE);

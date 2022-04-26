@@ -2,24 +2,26 @@ package com.project.HotelDoor.viewmodel;
 
 import android.app.Activity;
 import android.app.Application;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.project.HotelDoor.data.UserRepository;
 
-public class RegisterViewModel extends AndroidViewModel {
-
+public class LoginViewModel extends AndroidViewModel {
     private final UserRepository userRepository;
 
-    public RegisterViewModel(Application app) {
+
+
+    public LoginViewModel(Application app) {
         super(app);
         userRepository = UserRepository.getInstance(app);
     }
 
-    public void registerAccount(Activity activity, String email, String password)
-    {
-        userRepository.registerAccount(activity,email,password);
+    public void loginAccount(Activity activity, String email, String password) {
+        userRepository.loginAccount(activity, email, password);
     }
 
     public void setSignInPressed(Boolean isSignInPressed) {

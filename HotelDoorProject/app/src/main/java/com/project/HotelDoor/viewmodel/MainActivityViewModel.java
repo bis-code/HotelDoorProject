@@ -40,16 +40,9 @@ public class MainActivityViewModel extends AndroidViewModel {
         return userRepository.getProgressBar();
     }
 
-    public LiveData<Boolean> getSignOut() {
-        return userRepository.getSignOut();
-    }
-    public void signOut()
+    public LiveData<Boolean> getSignInPressed()
     {
-        userRepository.signOut();
-    }
-
-    public void onRegisterAccount(Activity activity, String email, String password) {
-        userRepository.registerAccount(activity, email, password);
+        return userRepository.getSignInPressed();
     }
 
     //TODO: feature functionality for others repositories.

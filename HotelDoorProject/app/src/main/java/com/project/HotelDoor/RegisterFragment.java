@@ -65,5 +65,14 @@ public class RegisterFragment extends Fragment {
                 }
             });
         }
+        if(toLoginButton != null)
+        {
+            toLoginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    registerViewModel.setSignInPressed(true);
+                }
+            });
+        }
     }
 }
