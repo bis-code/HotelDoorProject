@@ -1,7 +1,6 @@
-package com.project.HotelDoor;
+package com.project.HotelDoor.ui.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.project.HotelDoor.R;
 import com.project.HotelDoor.viewmodel.RegisterViewModel;
 
 public class RegisterFragment extends Fragment {

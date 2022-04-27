@@ -1,4 +1,4 @@
-package com.project.HotelDoor;
+package com.project.HotelDoor.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -14,7 +14,11 @@ import android.widget.Toast;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.project.HotelDoor.R;
 import com.project.HotelDoor.data.Stage;
+import com.project.HotelDoor.ui.fragments.LoginFragment;
+import com.project.HotelDoor.ui.fragments.MainPageFragment;
+import com.project.HotelDoor.ui.fragments.RegisterFragment;
 import com.project.HotelDoor.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity {
