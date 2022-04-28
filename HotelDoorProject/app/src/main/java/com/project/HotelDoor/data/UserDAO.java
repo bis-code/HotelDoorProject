@@ -95,8 +95,8 @@ public class UserDAO {
 
     public void signOut() {
         createUser("dadsad", "Asdadasd");
-        AuthUI.getInstance().signOut(app.getApplicationContext());
-        signOut.setValue(true);
+//        AuthUI.getInstance().signOut(app.getApplicationContext());
+//        signOut.setValue(true);
     }
 
     public void registerAccount(Activity activity, String email, String password) {
@@ -213,9 +213,7 @@ public class UserDAO {
                         public void onSuccess(DocumentReference userDocument) {
                             Log.d(TAG, "DocumentSnapshot added with ID: " + userDocument.getId());
                             HashMap<String, Object> reviewss = new HashMap<>();
-                            reviewss.put("userId", userDocument.getId());
-                            reviewss.put("Stars", 3);
-                            reviewss.put("Comment", "adasda");
+                            //TODO: will need to move add reviews and add comments functionality in other methods.
                             userDocument.collection("reviews").add(reviewss)
                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
