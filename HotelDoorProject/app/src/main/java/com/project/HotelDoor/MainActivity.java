@@ -82,14 +82,6 @@ public class MainActivity extends AppCompatActivity {
                     stage.setStage("login");
                     startActivity();
                 }
-                else {
-                    if(stage.getPreviousStage() != null)
-                    {
-                        stage.setStage("register");
-                        startActivity();
-
-                    }
-                }
             }
         });
     }

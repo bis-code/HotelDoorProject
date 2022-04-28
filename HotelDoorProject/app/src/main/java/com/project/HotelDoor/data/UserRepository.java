@@ -30,28 +30,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class UserRepository {
-    private final UserLiveData currentUser;
-    private final Application app;
     private static UserRepository instance;
-
-    private MutableLiveData<String> authenticationMessage = new MutableLiveData<>("");
-    private MutableLiveData<Boolean> progressBar = new MutableLiveData<>(false);
-
-    //enter sign in
-    private MutableLiveData<Boolean> signInPressed = new MutableLiveData<>(false);
-
-    //sign out
-    private MutableLiveData<Boolean> signOut = new MutableLiveData<>(false);
-
-    //Authentication
-    private FirebaseAuth firebaseAuth;
-
+    private static UserDAO userDAO;
     private UserRepository(Application app) {
-        this.app = app;
-        currentUser = new UserLiveData();
-
-        firebaseAuth = FirebaseAuth.getInstance();
+        userDAO = UserDAO.getInstance(app);
     }
+
 
     public static UserRepository getInstance(Application app) {
         if (instance == null) {
@@ -62,123 +46,46 @@ public class UserRepository {
 
     public LiveData<Boolean> getSignInPressed()
     {
-        return signInPressed;
+        return userDAO.getSignInPressed();
     }
 
     public void setSignInPressed(Boolean isSignInPressed) {
-        this.signInPressed.setValue(isSignInPressed);
+        userDAO.setSignInPressed(isSignInPressed);
     }
 
     public LiveData<String> getAuthenticationMessage()
     {
-        return authenticationMessage;
+        return userDAO.getAuthenticationMessage();
     }
 
     public LiveData<Boolean> getProgressBar()
     {
-        return progressBar;
+        return userDAO.getProgressBar();
     }
 
     public LiveData<FirebaseUser> getCurrentUser() {
-        return currentUser;
+       return userDAO.getCurrentUser();
     }
 
     public LiveData<Boolean> getSignOut() {
-         return signOut;
+        return userDAO.getSignOut();
     }
 
     public void signOut() {
-        AuthUI.getInstance().signOut(app.getApplicationContext());
-        signOut.setValue(true);
+       userDAO.signOut();
     }
 
     public void registerAccount(Activity activity, String email, String password) {
-        progressBar.setValue(true);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success
-                                    Log.d(TAG, "createUserWithEmail:success");
-                                    authenticationMessage.postValue("User created!");
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    authenticationMessage.postValue("Error on creating user");
-                                }
-                            }
-                        });
-                signOut.postValue(false);
-                progressBar.postValue(false);
-            }
-        },3000);
+        userDAO.registerAccount(activity,email,password);
     }
 
     public void loginAccount(Activity activity, String email, String password)
     {
-        progressBar.setValue(true);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                firebaseAuth.signInWithEmailAndPassword(email, password).
-                        addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful())
-                                {
-                                    //Sign in success
-                                    Log.d(TAG,"signInUserWithEmail:success");
-                                    authenticationMessage.postValue("You are signed in!");
-                                }
-                                else {
-                                    Log.w(TAG,"signInWithEmail:failure", task.getException());
-                                    authenticationMessage.postValue("Error on signing in");
-                                }
-                            }
-                        });
-                signOut.postValue(false);
-                signInPressed.postValue(false);
-                progressBar.postValue(false);
-            }
-        },3000);
+        userDAO.loginAccount(activity,email,password);
     }
 
-//    public void registerGoogleAccount(Activity activity)
-//    {
-//        BeginSignInRequest.builder()
-//                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                        .setSupported(true)
-//                        // Your server's client ID, not your Android client ID.
-//                        .setServerClientId(getString(R.string.default_web_client_id))
-//                        // Only show accounts previously used to sign in.
-//                        .setFilterByAuthorizedAccounts(true)
-//                        .build())
-//                .build();
-//
-//        SignInCredential googleCredential = oneTapClient.getSignInCredentialFromIntent(data);
-//        String idToken = googleCredential.getGoogleIdToken();
-//        if (idToken !=  null) {
-//        AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-//        firebaseAuth.signInWithCredential(firebaseCredential)
-//                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "signInWithCredential:success");
-//                            signOut.postValue(false);
-//
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-//
-//                        }
-//                    }
-//                });
-//    }
-//    }
+    public void forgotPassword(View view)
+    {
+        userDAO.forgotPassword(view);
+    }
 }
