@@ -1,4 +1,4 @@
-package com.project.HotelDoor;
+package com.project.HotelDoor.ui.fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.project.HotelDoor.R;
 import com.project.HotelDoor.viewmodel.LoginViewModel;
 
 public class LoginFragment extends Fragment {
