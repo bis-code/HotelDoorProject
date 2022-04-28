@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.DialogInterface;
+import android.hardware.ConsumerIrManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -22,7 +23,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,11 +51,15 @@ public class UserDAO {
     //Authentication
     private FirebaseAuth firebaseAuth;
 
+    //Firebase Database
+    private FirebaseFirestore firebaseDatabase;
+
     private UserDAO(Application app) {
         this.app = app;
         currentUser = new UserLiveData();
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseFirestore.getInstance();
     }
 
     public static UserDAO getInstance(Application app) {
@@ -57,8 +69,7 @@ public class UserDAO {
         return instance;
     }
 
-    public LiveData<Boolean> getSignInPressed()
-    {
+    public LiveData<Boolean> getSignInPressed() {
         return signInPressed;
     }
 
@@ -66,13 +77,11 @@ public class UserDAO {
         this.signInPressed.setValue(isSignInPressed);
     }
 
-    public LiveData<String> getAuthenticationMessage()
-    {
+    public LiveData<String> getAuthenticationMessage() {
         return authenticationMessage;
     }
 
-    public LiveData<Boolean> getProgressBar()
-    {
+    public LiveData<Boolean> getProgressBar() {
         return progressBar;
     }
 
@@ -85,6 +94,7 @@ public class UserDAO {
     }
 
     public void signOut() {
+        createUser("dadsad", "Asdadasd");
         AuthUI.getInstance().signOut(app.getApplicationContext());
         signOut.setValue(true);
     }
@@ -112,11 +122,10 @@ public class UserDAO {
                 signOut.postValue(false);
                 progressBar.postValue(false);
             }
-        },3000);
+        }, 3000);
     }
 
-    public void loginAccount(Activity activity, String email, String password)
-    {
+    public void loginAccount(Activity activity, String email, String password) {
         progressBar.setValue(true);
         new Timer().schedule(new TimerTask() {
             @Override
@@ -125,14 +134,12 @@ public class UserDAO {
                         addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful())
-                                {
+                                if (task.isSuccessful()) {
                                     //Sign in success
-                                    Log.d(TAG,"signInUserWithEmail:success");
+                                    Log.d(TAG, "signInUserWithEmail:success");
                                     authenticationMessage.postValue("You are signed in!");
-                                }
-                                else {
-                                    Log.w(TAG,"signInWithEmail:failure", task.getException());
+                                } else {
+                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
                                     authenticationMessage.postValue("Error on signing in");
                                 }
                             }
@@ -141,7 +148,7 @@ public class UserDAO {
                 signInPressed.postValue(false);
                 progressBar.postValue(false);
             }
-        },3000);
+        }, 3000);
     }
 
     public void forgotPassword(View view) {
@@ -158,13 +165,13 @@ public class UserDAO {
                     @Override
                     public void onSuccess(Void unused) {
                         authenticationMessage.postValue("Email sent!");
-                        Log.e(TAG,"Email sent!");
+                        Log.e(TAG, "Email sent!");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         authenticationMessage.postValue("Error! Reset link is not sent!");
-                        Log.w(TAG,e.getMessage());
+                        Log.w(TAG, e.getMessage());
                     }
                 });
 
@@ -180,38 +187,79 @@ public class UserDAO {
 
         passwordResetDialog.create().show();
     }
+
+
+    //TODO: make functionality for updating password, email etc etc.
+    //TODO: make UI design for profile information and update information
+    //TODO: use this method when user's email is verified!!!
+    //TODO: save user ID in a variable that can be used in viewmodels!!
+    public void createUser(String email, String password) {
+        Map<String, Object> user = new HashMap<>();
+        if (currentUser.getValue() != null) {
+            User createUser = new User(firebaseAuth.getCurrentUser().getUid(), email, password);
+            user.put("uid", createUser.getUserId());
+            user.put("username", createUser.getUsername());
+            user.put("password", createUser.getPassword());
+            user.put("email", createUser.getEmail());
+            user.put("comments", createUser.getComments());
+            user.put("reviews", createUser.getReviews());
+            user.put("fullName", createUser.getUsername());
+            user.put("streetAddress", createUser.getStreetAddress());
+            user.put("numberAddress", createUser.getNumberAddress());
+            firebaseDatabase.collection("users")
+                    .add(user).
+                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference userDocument) {
+                            Log.d(TAG, "DocumentSnapshot added with ID: " + userDocument.getId());
+                            HashMap<String, Object> reviewss = new HashMap<>();
+                            reviewss.put("userId", userDocument.getId());
+                            reviewss.put("Stars", 3);
+                            reviewss.put("Comment", "adasda");
+                            userDocument.collection("reviews").add(reviewss)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference reviewDocument) {
+                                            Log.d(TAG, "DocumentSnapshot added with ID: " + reviewDocument.getId());
+
+                                            HashMap<String, Object> commentss = new HashMap<>();
+                                            commentss.put("reviewId", reviewDocument.getId());
+                                            commentss.put("Likes", 3);
+                                            commentss.put("Comment", "it's good");
+                                            reviewDocument.collection("comments").add(commentss).
+                                                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference commentDocument) {
+                                                            Log.d(TAG, "DocumentSnapshot added with ID: " + commentDocument.getId());
+                                                        }
+                                                    }).
+                                                    addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.w(TAG, "Error adding document", e);
+                                                            System.out.println("mata");
+                                                        }
+                                                    });
+                                        }
+                                    }).
+                                    addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(TAG, "Error adding document", e);
+                                            System.out.println("mata");
+                                        }
+                                    });
+
+                            System.out.println("Success");
+                        }
+                    }).
+                    addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                            System.out.println("mata");
+                        }
+                    });
+        }
+    }
 }
-//    public void registerGoogleAccount(Activity activity)
-//    {
-//        BeginSignInRequest.builder()
-//                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                        .setSupported(true)
-//                        // Your server's client ID, not your Android client ID.
-//                        .setServerClientId(getString(R.string.default_web_client_id))
-//                        // Only show accounts previously used to sign in.
-//                        .setFilterByAuthorizedAccounts(true)
-//                        .build())
-//                .build();
-//
-//        SignInCredential googleCredential = oneTapClient.getSignInCredentialFromIntent(data);
-//        String idToken = googleCredential.getGoogleIdToken();
-//        if (idToken !=  null) {
-//        AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-//        firebaseAuth.signInWithCredential(firebaseCredential)
-//                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "signInWithCredential:success");
-//                            signOut.postValue(false);
-//
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-//
-//                        }
-//                    }
-//                });
-//    }
-//    }
