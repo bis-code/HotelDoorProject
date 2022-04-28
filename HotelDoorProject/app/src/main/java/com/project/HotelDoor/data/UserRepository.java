@@ -4,12 +4,9 @@ import static android.content.ContentValues.TAG;
 import static android.provider.Settings.System.getString;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Application;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,8 +17,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -65,7 +60,8 @@ public class UserRepository {
         return instance;
     }
 
-    public LiveData<Boolean> getSignInPressed() {
+    public LiveData<Boolean> getSignInPressed()
+    {
         return signInPressed;
     }
 
@@ -73,11 +69,13 @@ public class UserRepository {
         this.signInPressed.setValue(isSignInPressed);
     }
 
-    public LiveData<String> getAuthenticationMessage() {
+    public LiveData<String> getAuthenticationMessage()
+    {
         return authenticationMessage;
     }
 
-    public LiveData<Boolean> getProgressBar() {
+    public LiveData<Boolean> getProgressBar()
+    {
         return progressBar;
     }
 
@@ -86,7 +84,7 @@ public class UserRepository {
     }
 
     public LiveData<Boolean> getSignOut() {
-        return signOut;
+         return signOut;
     }
 
     public void signOut() {
@@ -117,10 +115,11 @@ public class UserRepository {
                 signOut.postValue(false);
                 progressBar.postValue(false);
             }
-        }, 3000);
+        },3000);
     }
 
-    public void loginAccount(Activity activity, String email, String password) {
+    public void loginAccount(Activity activity, String email, String password)
+    {
         progressBar.setValue(true);
         new Timer().schedule(new TimerTask() {
             @Override
@@ -129,59 +128,24 @@ public class UserRepository {
                         addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
+                                if(task.isSuccessful())
+                                {
                                     //Sign in success
-                                    Log.d(TAG, "signInUserWithEmail:success");
+                                    Log.d(TAG,"signInUserWithEmail:success");
                                     authenticationMessage.postValue("You are signed in!");
-                                } else {
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                }
+                                else {
+                                    Log.w(TAG,"signInWithEmail:failure", task.getException());
                                     authenticationMessage.postValue("Error on signing in");
                                 }
                             }
                         });
                 signOut.postValue(false);
+                signInPressed.postValue(false);
                 progressBar.postValue(false);
             }
-        }, 3000);
+        },3000);
     }
-
-    public void forgotPassword(View view) {
-        EditText resetEmail = new EditText(view.getContext());
-        AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(view.getContext());
-        passwordResetDialog.setTitle("Reset password?");
-        passwordResetDialog.setMessage("Enter your email to reset the password");
-        passwordResetDialog.setView(resetEmail);
-
-        passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                firebaseAuth.sendPasswordResetEmail(resetEmail.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        authenticationMessage.postValue("Email sent!");
-                        Log.e(TAG,"Email sent!");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        authenticationMessage.postValue("Error! Reset link is not sent!");
-                        Log.w(TAG,e.getMessage());
-                    }
-                });
-
-            }
-        });
-
-        passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                authenticationMessage.postValue("Reset password cancelled.");
-            }
-        });
-
-        passwordResetDialog.create().show();
-    }
-}
 
 //    public void registerGoogleAccount(Activity activity)
 //    {
@@ -217,3 +181,4 @@ public class UserRepository {
 //                });
 //    }
 //    }
+}

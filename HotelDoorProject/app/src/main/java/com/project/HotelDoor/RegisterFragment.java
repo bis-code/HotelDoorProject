@@ -74,12 +74,5 @@ public class RegisterFragment extends Fragment {
                 }
             });
         }
-
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerViewModel.forgotPassword(view);
-            }
-        });
     }
 }
