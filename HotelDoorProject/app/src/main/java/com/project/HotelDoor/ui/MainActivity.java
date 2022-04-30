@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     BottomAppBar bottomAppBar;
     FloatingActionButton floatingPlus;
+    //TODO: need to add functionality for the bottomNAvigationView so it changes between fragments
 
     private final RegisterFragment registerFragment = new RegisterFragment();
     private final MainPageFragment mainPageFragment = new MainPageFragment();
