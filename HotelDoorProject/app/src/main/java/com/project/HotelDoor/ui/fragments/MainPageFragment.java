@@ -21,7 +21,7 @@ import com.project.HotelDoor.viewmodel.MainPageViewModel;
 // */
 public class MainPageFragment extends Fragment {
 
-    Button logoutButton;
+
     private MainPageViewModel mainPageViewModel;
 
     public static MainPageFragment newInstance() {
@@ -33,14 +33,7 @@ public class MainPageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mainPageViewModel = new ViewModelProvider(this).get(MainPageViewModel.class);
 
-        if (logoutButton != null) {
-            logoutButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mainPageViewModel.logout();
-                }
-            });
-        }
+
 
     }
 
@@ -49,7 +42,6 @@ public class MainPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_page, container, false);
-        logoutButton = view.findViewById(R.id.logoutButton);
         // Inflate the layout for this fragment
 
         return view;

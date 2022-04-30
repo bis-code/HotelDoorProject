@@ -17,9 +17,6 @@ public class MainPageViewModel extends AndroidViewModel {
         userRepository = UserRepository.getInstance(app);
     }
 
-    public void logout()
-    {
-        userRepository.signOut();
-    }
+
 
 }

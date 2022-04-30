@@ -1,33 +1,12 @@
 package com.project.HotelDoor.data;
 
-import static android.content.ContentValues.TAG;
-import static android.provider.Settings.System.getString;
-
 import android.app.Activity;
 import android.app.Application;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInCredential;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.project.HotelDoor.R;
-
-import java.sql.Time;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class UserRepository {
     private static UserRepository instance;
@@ -87,5 +66,14 @@ public class UserRepository {
     public void forgotPassword(View view)
     {
         userDAO.forgotPassword(view);
+    }
+
+    public boolean isEmailVerified()
+    {
+       return userDAO.isUserEmailVerified();
+    }
+
+    public void verifyEmail(){
+        userDAO.verifyEmail();
     }
 }

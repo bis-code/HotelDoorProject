@@ -94,9 +94,9 @@ public class UserDAO {
     }
 
     public void signOut() {
-        createUser("dadsad", "Asdadasd");
-//        AuthUI.getInstance().signOut(app.getApplicationContext());
-//        signOut.setValue(true);
+//        createUser("dadsad", "Asdadasd");
+        AuthUI.getInstance().signOut(app.getApplicationContext());
+        signOut.setValue(true);
     }
 
     public void registerAccount(Activity activity, String email, String password) {
@@ -259,5 +259,47 @@ public class UserDAO {
                         }
                     });
         }
+    }
+
+    public boolean isUserEmailVerified()
+    {
+        if(currentUser.getValue() != null)
+        {
+            return currentUser.getValue().isEmailVerified();
+        }
+        return false;
+    }
+
+    public void verifyEmail() {
+        progressBar.setValue(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(currentUser.getValue() != null)
+                {
+                    currentUser.getValue().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful())
+                            {
+                                Log.d(TAG, "Email successfully sent!");
+                                authenticationMessage.postValue("Email successfully sent!");
+                            }
+                            else {
+                                Log.e(TAG, "Error sending the mail. Error: " + task.getException());
+                                authenticationMessage.postValue("Error sending the mail.");
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "Error sending the mail. Error: " + e.getMessage());
+                            authenticationMessage.postValue("Error sending the mail.");
+                        }
+                    });
+                }
+                progressBar.postValue(false);
+            }
+        }, 3000);
     }
 }

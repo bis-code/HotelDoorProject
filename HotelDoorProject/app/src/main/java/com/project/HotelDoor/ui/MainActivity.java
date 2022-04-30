@@ -1,5 +1,6 @@
 package com.project.HotelDoor.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -7,6 +8,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -18,12 +20,13 @@ import com.project.HotelDoor.R;
 import com.project.HotelDoor.data.Stage;
 import com.project.HotelDoor.ui.fragments.LoginFragment;
 import com.project.HotelDoor.ui.fragments.MainPageFragment;
+import com.project.HotelDoor.ui.fragments.ProfileFragment;
 import com.project.HotelDoor.ui.fragments.RegisterFragment;
 import com.project.HotelDoor.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private Stage stage;
-
+    //TODO: repair bug it does not go back when pressing on create account button on login fragment.
     BottomNavigationView bottomNavigationView;
     BottomAppBar bottomAppBar;
     FloatingActionButton floatingPlus;
@@ -31,9 +34,13 @@ public class MainActivity extends AppCompatActivity {
     private final RegisterFragment registerFragment = new RegisterFragment();
     private final MainPageFragment mainPageFragment = new MainPageFragment();
     private final LoginFragment loginFragment = new LoginFragment();
+    private final ProfileFragment profileFragment = new ProfileFragment();
 
     ProgressBar progressBar;
     private MainActivityViewModel viewmodel;
+
+    //Bottom Nav Items
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         //showing bottom navigation view
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
-        bottomNavigationView.getMenu().getItem(2).setEnabled(false);
+        bottomNavigationView.getMenu().getItem(2).setEnabled(true);
         bottomAppBar = findViewById(R.id.bottomAppBar);
         floatingPlus = findViewById(R.id.floatingPlus);
 
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         viewmodel.getCurrentUser().observe(this, user -> {
             if(user != null) {
                 viewmodel.init(user);
-                stage.setStage("main");
+                stage.setStage("profile");
                 startActivity();
             }
             else{
@@ -88,6 +95,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+//        bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+//            @Override
+//            public void onNavigationItemReselected(@NonNull MenuItem item) {
+//                switch (item.getItemId())
+//                {
+//                    case R.id.myAccount: {
+//                        stage.setStage("profile");
+//                        startActivity();
+//                        break;
+//                    }
+//                    default:
+//                        System.out.println("Nothing");
+//                }
+//            }
+//        });
     }
 
     private void startActivity()
@@ -113,6 +136,12 @@ public class MainActivity extends AppCompatActivity {
             case "login" : {
                 getSupportFragmentManager().beginTransaction().replace(R.id.loginFragment, loginFragment).commit();
                 stage.setPreviousStage("login");
+                makeBottomNavVisible(false);
+                break;
+            }
+            case "profile" : {
+                getSupportFragmentManager().beginTransaction().replace(R.id.profileFragment, profileFragment).commit();
+                stage.setPreviousStage("profile");
                 makeBottomNavVisible(false);
                 break;
             }
@@ -153,6 +182,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             }
+            case "profile" : {
+                fragment = getSupportFragmentManager().findFragmentById(R.id.profileFragment);
+                if(fragment != null) {
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                }
+                break;
+            }
             default:
         }
     }
@@ -171,4 +209,10 @@ public class MainActivity extends AppCompatActivity {
             floatingPlus.setVisibility(View.INVISIBLE);
         }
     }
+
+//    public void clickProfile(MenuItem item)
+//    {
+//        stage.setStage("profile");
+//        startActivity();
+//    }
 }
