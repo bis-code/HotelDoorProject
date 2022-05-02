@@ -1,5 +1,6 @@
 package com.project.HotelDoor.ui.fragments;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -8,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +23,7 @@ public class ProfileFragment extends Fragment {
     View addInfoLayout;
     View emailLayout;
     View isEmailVerifiedLayout;
+    Button verifyEmailButton;
     Button logoutButton;
 
     public static ProfileFragment newInstance() {
@@ -39,8 +40,9 @@ public class ProfileFragment extends Fragment {
         addInfoLayout = view.findViewById(R.id.addInformationCardView);
         emailLayout = view.findViewById(R.id.emailCardView);
         isEmailVerifiedLayout = view.findViewById(R.id.verifyEmail);
-        isEmailVerifiedLayout.setVisibility(View.INVISIBLE);
+        isEmailVerifiedLayout.setVisibility(View.GONE);
 
+        verifyEmailButton = view.findViewById(R.id.buttonVerifyEmail);
         logoutButton = view.findViewById(R.id.logoutButton);
         return view;
     }
@@ -50,24 +52,13 @@ public class ProfileFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
-        if (isEmailVerifiedLayout != null) {
-            if (!mViewModel.isEmailVerified()) {
-                isEmailVerifiedLayout.setVisibility(View.VISIBLE);
-
-                //verifiy button method
-                Button verifyButton = isEmailVerifiedLayout.findViewById(R.id.buttonVerifyEmail);
-                if (verifyButton != null)
-                {
-                    mViewModel.verifyEmail();
-                }
-            } else {
-                isEmailVerifiedLayout = null;
+        mViewModel.isEmailVerified().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                int visibility = aBoolean ? View.GONE : View.VISIBLE;
+                isEmailVerifiedLayout.setVisibility(visibility);
             }
-
-            //TODO: make such that verify cardview it's killed when email is verified (now it's still there, but invisible)
-            //TODO: to make such that it kills by itself once the email is veified you need to use MutableLiveData in userDAO.class
-
-        }
+        });
 
         if (logoutButton != null) {
             logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +69,15 @@ public class ProfileFragment extends Fragment {
             });
         }
 
+        if(verifyEmailButton != null)
+        {
+            verifyEmailButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mViewModel.verifyEmail();
+                }
+            });
+        }
 
     }
-
 }

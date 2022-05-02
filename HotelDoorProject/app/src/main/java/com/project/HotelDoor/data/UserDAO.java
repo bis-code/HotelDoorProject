@@ -7,11 +7,13 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.content.DialogInterface;
 import android.hardware.ConsumerIrManager;
+import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -38,13 +40,19 @@ public class UserDAO {
     private final UserLiveData currentUser;
     private final Application app;
     private static UserDAO instance;
+    private DocumentReference doc;
 
     private MutableLiveData<String> authenticationMessage = new MutableLiveData<>("");
     private MutableLiveData<Boolean> progressBar = new MutableLiveData<>(false);
 
+    //Verify email
+    private MutableLiveData<Boolean> isEmailVerified = new MutableLiveData<>(false);
+
     //enter sign in
     private MutableLiveData<Boolean> signInPressed = new MutableLiveData<>(false);
 
+    //enter register
+    private MutableLiveData<Boolean> registerPressed = new MutableLiveData<>(false);
     //sign out
     private MutableLiveData<Boolean> signOut = new MutableLiveData<>(false);
 
@@ -67,6 +75,15 @@ public class UserDAO {
             instance = new UserDAO(app);
         }
         return instance;
+    }
+
+    public MutableLiveData<Boolean> isEmailVerified()
+    {
+        if(currentUser.getValue() != null)
+        {
+            isEmailVerified.postValue(currentUser.getValue().isEmailVerified());
+        }
+        return isEmailVerified;
     }
 
     public LiveData<Boolean> getSignInPressed() {
@@ -94,7 +111,6 @@ public class UserDAO {
     }
 
     public void signOut() {
-//        createUser("dadsad", "Asdadasd");
         AuthUI.getInstance().signOut(app.getApplicationContext());
         signOut.setValue(true);
     }
@@ -145,7 +161,6 @@ public class UserDAO {
                             }
                         });
                 signOut.postValue(false);
-                signInPressed.postValue(false);
                 progressBar.postValue(false);
             }
         }, 3000);
@@ -206,68 +221,60 @@ public class UserDAO {
             user.put("fullName", createUser.getUsername());
             user.put("streetAddress", createUser.getStreetAddress());
             user.put("numberAddress", createUser.getNumberAddress());
-            firebaseDatabase.collection("users")
-                    .add(user).
-                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference userDocument) {
-                            Log.d(TAG, "DocumentSnapshot added with ID: " + userDocument.getId());
-                            HashMap<String, Object> reviewss = new HashMap<>();
-                            //TODO: will need to move add reviews and add comments functionality in other methods.
-                            userDocument.collection("reviews").add(reviewss)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference reviewDocument) {
-                                            Log.d(TAG, "DocumentSnapshot added with ID: " + reviewDocument.getId());
 
-                                            HashMap<String, Object> commentss = new HashMap<>();
-                                            commentss.put("reviewId", reviewDocument.getId());
-                                            commentss.put("Likes", 3);
-                                            commentss.put("Comment", "it's good");
-                                            reviewDocument.collection("comments").add(commentss).
-                                                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentReference commentDocument) {
-                                                            Log.d(TAG, "DocumentSnapshot added with ID: " + commentDocument.getId());
-                                                        }
-                                                    }).
-                                                    addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.w(TAG, "Error adding document", e);
-                                                            System.out.println("mata");
-                                                        }
-                                                    });
-                                        }
-                                    }).
-                                    addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error adding document", e);
-                                            System.out.println("mata");
-                                        }
-                                    });
-
-                            System.out.println("Success");
-                        }
-                    }).
-                    addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error adding document", e);
-                            System.out.println("mata");
-                        }
-                    });
+//            firebaseDatabase.collection("users")
+//                    .add(user).
+//                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                        @Override
+//                        public void onSuccess(DocumentReference userDocument) {
+//                            Log.d(TAG, "DocumentSnapshot added with ID: " + userDocument.getId());
+//                            HashMap<String, Object> reviewss = new HashMap<>();
+//                            //TODO: will need to move add reviews and add comments functionality in other methods.
+//                            userDocument.collection("reviews").add(reviewss)
+//                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                        @Override
+//                                        public void onSuccess(DocumentReference reviewDocument) {
+//                                            Log.d(TAG, "DocumentSnapshot added with ID: " + reviewDocument.getId());
+//
+//                                            HashMap<String, Object> commentss = new HashMap<>();
+//                                            commentss.put("reviewId", reviewDocument.getId());
+//                                            commentss.put("Likes", 3);
+//                                            commentss.put("Comment", "it's good");
+//                                            reviewDocument.collection("comments").add(commentss).
+//                                                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                                        @Override
+//                                                        public void onSuccess(DocumentReference commentDocument) {
+//                                                            Log.d(TAG, "DocumentSnapshot added with ID: " + commentDocument.getId());
+//                                                        }
+//                                                    }).
+//                                                    addOnFailureListener(new OnFailureListener() {
+//                                                        @Override
+//                                                        public void onFailure(@NonNull Exception e) {
+//                                                            Log.w(TAG, "Error adding document", e);
+//                                                            System.out.println("mata");
+//                                                        }
+//                                                    });
+//                                        }
+//                                    }).
+//                                    addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Log.w(TAG, "Error adding document", e);
+//                                            System.out.println("mata");
+//                                        }
+//                                    });
+//
+//                            System.out.println("Success");
+//                        }
+//                    }).
+//                    addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Log.w(TAG, "Error adding document", e);
+//                            System.out.println("mata");
+//                        }
+//                    });
         }
-    }
-
-    public boolean isUserEmailVerified()
-    {
-        if(currentUser.getValue() != null)
-        {
-            return currentUser.getValue().isEmailVerified();
-        }
-        return false;
     }
 
     public void verifyEmail() {
@@ -284,6 +291,7 @@ public class UserDAO {
                             {
                                 Log.d(TAG, "Email successfully sent!");
                                 authenticationMessage.postValue("Email successfully sent!");
+                                isEmailVerified.postValue(true);
                             }
                             else {
                                 Log.e(TAG, "Error sending the mail. Error: " + task.getException());

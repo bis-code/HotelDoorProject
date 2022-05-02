@@ -86,7 +86,7 @@
 
             <include
                 android:id="@+id/verifyEmail"
-                layout="@layout/item_mailverify"/>
+                layout="@layout/item_mailverify" />
 
             <include
                 android:id="@+id/addInformationCardView"

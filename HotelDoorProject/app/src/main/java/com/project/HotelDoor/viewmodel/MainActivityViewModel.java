@@ -5,6 +5,7 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +34,12 @@ public class MainActivityViewModel extends AndroidViewModel {
     public LiveData<String> getAuthenticationMessage()
     {
         return userRepository.getAuthenticationMessage();
+    }
+
+
+    public MutableLiveData<Boolean> isEmailVerified()
+    {
+        return userRepository.isEmailVerified();
     }
 
     public LiveData<Boolean> getProgressBar()

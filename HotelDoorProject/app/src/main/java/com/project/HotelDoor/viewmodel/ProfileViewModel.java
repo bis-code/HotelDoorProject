@@ -3,6 +3,7 @@ package com.project.HotelDoor.viewmodel;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -16,10 +17,11 @@ public class ProfileViewModel extends AndroidViewModel {
         userRepository = UserRepository.getInstance(app);
     }
 
-    public boolean isEmailVerified()
+    public MutableLiveData<Boolean> isEmailVerified()
     {
        return userRepository.isEmailVerified();
     }
+
 
     public void verifyEmail()
     {

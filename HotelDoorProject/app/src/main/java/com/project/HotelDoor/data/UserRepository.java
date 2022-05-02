@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseUser;
 
@@ -68,9 +70,9 @@ public class UserRepository {
         userDAO.forgotPassword(view);
     }
 
-    public boolean isEmailVerified()
+    public MutableLiveData<Boolean> isEmailVerified()
     {
-       return userDAO.isUserEmailVerified();
+       return userDAO.isEmailVerified();
     }
 
     public void verifyEmail(){
