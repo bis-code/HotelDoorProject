@@ -28,7 +28,8 @@
                     android:layout_height="44dp"
                     android:layout_alignParentStart="true"
                     android:padding="5dp"
-                    android:src="@drawable/ic_arrow" />
+                    android:src="@drawable/ic_arrow"
+                    android:onClick="onArrowBack"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -48,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="My"
+                android:text="Hello"
                 android:textColor="@color/white"
                 android:textSize="30sp"
                 android:textStyle="normal"
@@ -56,7 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:text="Profile"
+                android:id="@+id/updateUsername"
+                android:text="username"
                 android:textColor="@color/white"
                 android:textSize="33sp"
                 android:textStyle="bold"
@@ -66,15 +68,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <include
-        android:id="@+id/imagineCardView"
-        layout="@layout/item_imagine"
-        android:layout_width="395dp"
-        android:layout_height="218dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -83,6 +76,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <include
+                android:id="@+id/imagineCardView"
+                layout="@layout/item_imagine"
+                android:layout_width="395dp"
+                android:layout_height="218dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
 
             <include
                 android:id="@+id/verifyEmail"

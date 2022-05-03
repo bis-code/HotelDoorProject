@@ -148,6 +148,14 @@ public class MainActivity extends AppCompatActivity {
                 replace(R.id.navigationFragment,addInformationFragment).commit();
     }
 
+    public void onArrowBack(View view)
+    {
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(R.id.navigationFragment,homeFragment).commit();
+        //TODO: to make such that when it goes back to home the navigation drawer is set to home item.
+    }
+
 //    public void clickProfile(MenuItem item)
 //    {
 //        stage.setStage("profile");

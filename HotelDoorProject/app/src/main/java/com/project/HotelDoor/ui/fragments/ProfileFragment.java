@@ -3,6 +3,7 @@ package com.project.HotelDoor.ui.fragments;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -38,6 +39,10 @@ public class ProfileFragment extends Fragment {
     TextView myReviews;
     TextView addInformationText;
     ImageView addInformation;
+    TextView phone;
+    TextView address;
+    TextView name;
+    TextView username;
 
     User user;
 
@@ -61,9 +66,14 @@ public class ProfileFragment extends Fragment {
         logoutButton = view.findViewById(R.id.logoutButton);
 
         email = view.findViewById(R.id.updateEmail);
+        phone = view.findViewById(R.id.updateMobile);
+        address = view.findViewById(R.id.updateAddress);
+        username = view.findViewById(R.id.updateUsername);
+        name = view.findViewById(R.id.updateName);
         myReviews = view.findViewById(R.id.myReviews);
         addInformationText = view.findViewById(R.id.addInformationText);
         addInformation = view.findViewById(R.id.addInformation);
+
 
         return view;
     }
@@ -118,11 +128,16 @@ public class ProfileFragment extends Fragment {
         });
 
         mViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(User user) {
                 if(user != null)
                 {
                     email.setText(user.getEmail());
+                    phone.setText(user.getPhone());
+                    address.setText(user.getStreetAddress() + " " + user.getNumberAddress());
+                    name.setText(user.getFullName());
+                    username.setText(user.getUserName());
                 }
             }
         });
