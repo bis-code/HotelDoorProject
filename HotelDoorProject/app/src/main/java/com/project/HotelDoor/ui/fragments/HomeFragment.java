@@ -1,4 +1,4 @@
-package com.project.HotelDoor;
+package com.project.HotelDoor.ui.fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,26 +12,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.project.HotelDoor.viewmodel.SettingsViewModel;
+import com.project.HotelDoor.R;
+import com.project.HotelDoor.viewmodel.HomeViewModel;
 
-public class SettingsFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
-    private SettingsViewModel mViewModel;
+    private HomeViewModel mViewModel;
 
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.settings_fragment, container, false);
+        return inflater.inflate(R.layout.home_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         // TODO: Use the ViewModel
     }
 

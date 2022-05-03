@@ -2,6 +2,7 @@ package com.project.HotelDoor.viewmodel;
 
 import android.app.Activity;
 import android.app.Application;
+import android.view.View;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -51,6 +52,5 @@ public class MainActivityViewModel extends AndroidViewModel {
     {
         return userRepository.getSignInPressed();
     }
-
-    //TODO: feature functionality for others repositories.
+        //TODO: feature functionality for others repositories.
 }

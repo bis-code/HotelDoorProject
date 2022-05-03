@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginBottom="15dp"
-                android:text="+45 02332355"
+                android:text="+45 notset"
                 android:textColor="@color/black"
                 android:textSize="25sp"
                 android:textStyle="bold" />

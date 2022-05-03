@@ -3,62 +3,57 @@ package com.project.HotelDoor.data;
 import java.util.ArrayList;
 
 public class User {
-    private String userId;
-    private String username;
-    private String password;
+    private String uid;
+    private String userName;
     private String email;
-    private ArrayList<String> comments;
+
+    //TODO: change to review object
     private ArrayList<String> reviews;
     private String fullName;
     private String streetAddress;
     private int numberAddress;
+    private String phone;
 
-    public User(String userId, String username, String password) {
-        this.userId = userId;
-        this.username = username;
-        this.password = password;
+    public User(String uid, String userName) {
+        this.uid = uid;
+        this.userName = userName;
         email = null;
-        comments = new ArrayList<>();
         reviews = new ArrayList<>();
         fullName = null;
         streetAddress = null;
         numberAddress = -1;
+        phone = null;
     }
 
-    public User(String userId, String username, String password, String email, ArrayList<String> comments, ArrayList<String> reviews, String fullName, String streetAddress, int numberAddress) {
-        this.userId = userId;
-        this.username = username;
-        this.password = password;
+    public User(String uid, String userName, String email, String phone,ArrayList<String> comments, ArrayList<String> reviews, String fullName, String streetAddress, int numberAddress) {
+        this.uid = uid;
+        this.userName = userName;
+        this.phone = phone;
         this.email = email;
-        this.comments = comments;
         this.reviews = reviews;
         this.fullName = fullName;
         this.streetAddress = streetAddress;
         this.numberAddress = numberAddress;
     }
 
-    public String getUserId() {
-        return userId;
+    public User()
+    {
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String getUid() {
+        return uid;
     }
 
-    public String getUsername() {
-        return username;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -67,14 +62,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public ArrayList<String> getComments() {
-        return comments;
-    }
-
-    public void setComments(ArrayList<String> comments) {
-        this.comments = comments;
     }
 
     public ArrayList<String> getReviews() {
@@ -87,6 +74,14 @@ public class User {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public void setFullName(String fullName) {
@@ -107,5 +102,18 @@ public class User {
 
     public void setNumberAddress(int numberAddress) {
         this.numberAddress = numberAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid='" + uid + '\'' +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", reviews=" + reviews +
+                ", fullName='" + fullName + '\'' +
+                ", streetAddress='" + streetAddress + '\'' +
+                ", numberAddress=" + numberAddress +
+                '}';
     }
 }

@@ -3,6 +3,7 @@ package com.project.HotelDoor.ui.fragments;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,9 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.project.HotelDoor.data.User;
 import com.project.HotelDoor.viewmodel.ProfileViewModel;
 import com.project.HotelDoor.R;
+
+import org.w3c.dom.Text;
 
 public class ProfileFragment extends Fragment {
     private ProfileViewModel mViewModel;
@@ -25,6 +32,14 @@ public class ProfileFragment extends Fragment {
     View isEmailVerifiedLayout;
     Button verifyEmailButton;
     Button logoutButton;
+
+    //User information
+    TextView email;
+    TextView myReviews;
+    TextView addInformationText;
+    ImageView addInformation;
+
+    User user;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -44,6 +59,12 @@ public class ProfileFragment extends Fragment {
 
         verifyEmailButton = view.findViewById(R.id.buttonVerifyEmail);
         logoutButton = view.findViewById(R.id.logoutButton);
+
+        email = view.findViewById(R.id.updateEmail);
+        myReviews = view.findViewById(R.id.myReviews);
+        addInformationText = view.findViewById(R.id.addInformationText);
+        addInformation = view.findViewById(R.id.addInformation);
+
         return view;
     }
 
@@ -51,6 +72,7 @@ public class ProfileFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        user = null;
 
         mViewModel.isEmailVerified().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -69,8 +91,7 @@ public class ProfileFragment extends Fragment {
             });
         }
 
-        if(verifyEmailButton != null)
-        {
+        if (verifyEmailButton != null) {
             verifyEmailButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -79,5 +100,31 @@ public class ProfileFragment extends Fragment {
             });
         }
 
+        myReviews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: another fragment where it shows reviews created so far.
+            }
+        });
+
+        mViewModel.getCurrentUser().observe(getViewLifecycleOwner(), new Observer<FirebaseUser>() {
+            @Override
+            public void onChanged(FirebaseUser firebaseUser) {
+                if(firebaseUser != null)
+                {
+                    mViewModel.setUser(firebaseUser.getUid());
+                }
+            }
+        });
+
+        mViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if(user != null)
+                {
+                    email.setText(user.getEmail());
+                }
+            }
+        });
     }
 }

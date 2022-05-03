@@ -1,4 +1,4 @@
-package com.project.HotelDoor;
+package com.project.HotelDoor.ui.fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.project.HotelDoor.R;
 import com.project.HotelDoor.viewmodel.MapViewModel;
 
 public class MapFragment extends Fragment {

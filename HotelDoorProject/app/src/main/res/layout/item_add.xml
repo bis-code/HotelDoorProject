@@ -63,7 +63,8 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_add" />
+                    android:src="@drawable/ic_add"
+                    android:onClick="switchAddFragment"/>
 
                 <TextView
                     android:id="@+id/addInformationText"
@@ -73,7 +74,8 @@
                     android:text="Add Information"
                     android:textColor="#286DC2"
                     android:textSize="16sp"
-                    android:textStyle="bold|normal" />
+                    android:textStyle="bold|normal"
+                    android:onClick="switchAddFragment"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -98,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:hint="Your address"
+                    android:hint="address not set"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold" />

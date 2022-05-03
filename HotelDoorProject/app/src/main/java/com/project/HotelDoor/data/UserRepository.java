@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class UserRepository {
     private static UserRepository instance;
     private static UserDAO userDAO;
+
     private UserRepository(Application app) {
         userDAO = UserDAO.getInstance(app);
     }
@@ -25,8 +26,7 @@ public class UserRepository {
         return instance;
     }
 
-    public LiveData<Boolean> getSignInPressed()
-    {
+    public LiveData<Boolean> getSignInPressed() {
         return userDAO.getSignInPressed();
     }
 
@@ -34,18 +34,16 @@ public class UserRepository {
         userDAO.setSignInPressed(isSignInPressed);
     }
 
-    public LiveData<String> getAuthenticationMessage()
-    {
+    public LiveData<String> getAuthenticationMessage() {
         return userDAO.getAuthenticationMessage();
     }
 
-    public LiveData<Boolean> getProgressBar()
-    {
+    public LiveData<Boolean> getProgressBar() {
         return userDAO.getProgressBar();
     }
 
     public LiveData<FirebaseUser> getCurrentUser() {
-       return userDAO.getCurrentUser();
+        return userDAO.getCurrentUser();
     }
 
     public LiveData<Boolean> getSignOut() {
@@ -53,29 +51,38 @@ public class UserRepository {
     }
 
     public void signOut() {
-       userDAO.signOut();
+        userDAO.signOut();
     }
 
     public void registerAccount(Activity activity, String email, String password) {
-        userDAO.registerAccount(activity,email,password);
+        userDAO.registerAccount(activity, email, password);
     }
 
-    public void loginAccount(Activity activity, String email, String password)
-    {
-        userDAO.loginAccount(activity,email,password);
+    public void loginAccount(Activity activity, String email, String password) {
+        userDAO.loginAccount(activity, email, password);
     }
 
-    public void forgotPassword(View view)
-    {
+    public void forgotPassword(View view) {
         userDAO.forgotPassword(view);
     }
 
-    public MutableLiveData<Boolean> isEmailVerified()
-    {
-       return userDAO.isEmailVerified();
+    public MutableLiveData<Boolean> isEmailVerified() {
+        return userDAO.isEmailVerified();
     }
 
-    public void verifyEmail(){
+    public LiveData<User> getUser() {
+        return userDAO.getUser();
+    }
+
+    public void verifyEmail() {
         userDAO.verifyEmail();
+    }
+
+    public void setUser(String uid) {
+        userDAO.setUser(uid);
+    }
+
+    public void updateUserInformation(String userName, String fullName, String phone, String streetAddress, String numberStreet) {
+        userDAO.updateUserInformation(userName,fullName,phone,streetAddress,numberStreet);
     }
 }

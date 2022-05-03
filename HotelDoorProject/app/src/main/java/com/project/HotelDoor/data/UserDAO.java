@@ -6,14 +6,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.DialogInterface;
-import android.hardware.ConsumerIrManager;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -25,22 +22,24 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.protobuf.Empty;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import kotlin.jvm.internal.markers.KMutableCollection;
+
 public class UserDAO {
     private final UserLiveData currentUser;
     private final Application app;
     private static UserDAO instance;
-    private DocumentReference doc;
 
     private MutableLiveData<String> authenticationMessage = new MutableLiveData<>("");
     private MutableLiveData<Boolean> progressBar = new MutableLiveData<>(false);
@@ -51,16 +50,18 @@ public class UserDAO {
     //enter sign in
     private MutableLiveData<Boolean> signInPressed = new MutableLiveData<>(false);
 
-    //enter register
-    private MutableLiveData<Boolean> registerPressed = new MutableLiveData<>(false);
     //sign out
     private MutableLiveData<Boolean> signOut = new MutableLiveData<>(false);
+
+    private MutableLiveData<User> user = new MutableLiveData<>(null);
 
     //Authentication
     private FirebaseAuth firebaseAuth;
 
     //Firebase Database
     private FirebaseFirestore firebaseDatabase;
+
+    User returnedUser;
 
     private UserDAO(Application app) {
         this.app = app;
@@ -77,14 +78,13 @@ public class UserDAO {
         return instance;
     }
 
-    public MutableLiveData<Boolean> isEmailVerified()
-    {
-        if(currentUser.getValue() != null)
-        {
+    public MutableLiveData<Boolean> isEmailVerified() {
+        if (currentUser.getValue() != null) {
             isEmailVerified.postValue(currentUser.getValue().isEmailVerified());
         }
         return isEmailVerified;
     }
+
 
     public LiveData<Boolean> getSignInPressed() {
         return signInPressed;
@@ -104,6 +104,10 @@ public class UserDAO {
 
     public LiveData<FirebaseUser> getCurrentUser() {
         return currentUser;
+    }
+
+    public LiveData<User> getUser() {
+        return user;
     }
 
     public LiveData<Boolean> getSignOut() {
@@ -128,6 +132,7 @@ public class UserDAO {
                                     // Sign in success
                                     Log.d(TAG, "createUserWithEmail:success");
                                     authenticationMessage.postValue("User created!");
+                                    createUser(getCurrentUser().getValue().getUid(), email);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -208,72 +213,77 @@ public class UserDAO {
     //TODO: make UI design for profile information and update information
     //TODO: use this method when user's email is verified!!!
     //TODO: save user ID in a variable that can be used in viewmodels!!
-    public void createUser(String email, String password) {
-        Map<String, Object> user = new HashMap<>();
-        if (currentUser.getValue() != null) {
-            User createUser = new User(firebaseAuth.getCurrentUser().getUid(), email, password);
-            user.put("uid", createUser.getUserId());
-            user.put("username", createUser.getUsername());
-            user.put("password", createUser.getPassword());
-            user.put("email", createUser.getEmail());
-            user.put("comments", createUser.getComments());
-            user.put("reviews", createUser.getReviews());
-            user.put("fullName", createUser.getUsername());
-            user.put("streetAddress", createUser.getStreetAddress());
-            user.put("numberAddress", createUser.getNumberAddress());
+    public void createUser(String uid, String email) {
 
-//            firebaseDatabase.collection("users")
-//                    .add(user).
-//                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                        @Override
-//                        public void onSuccess(DocumentReference userDocument) {
-//                            Log.d(TAG, "DocumentSnapshot added with ID: " + userDocument.getId());
-//                            HashMap<String, Object> reviewss = new HashMap<>();
-//                            //TODO: will need to move add reviews and add comments functionality in other methods.
-//                            userDocument.collection("reviews").add(reviewss)
-//                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                        @Override
-//                                        public void onSuccess(DocumentReference reviewDocument) {
-//                                            Log.d(TAG, "DocumentSnapshot added with ID: " + reviewDocument.getId());
-//
-//                                            HashMap<String, Object> commentss = new HashMap<>();
-//                                            commentss.put("reviewId", reviewDocument.getId());
-//                                            commentss.put("Likes", 3);
-//                                            commentss.put("Comment", "it's good");
-//                                            reviewDocument.collection("comments").add(commentss).
-//                                                    addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                        @Override
-//                                                        public void onSuccess(DocumentReference commentDocument) {
-//                                                            Log.d(TAG, "DocumentSnapshot added with ID: " + commentDocument.getId());
-//                                                        }
-//                                                    }).
-//                                                    addOnFailureListener(new OnFailureListener() {
-//                                                        @Override
-//                                                        public void onFailure(@NonNull Exception e) {
-//                                                            Log.w(TAG, "Error adding document", e);
-//                                                            System.out.println("mata");
-//                                                        }
-//                                                    });
-//                                        }
-//                                    }).
-//                                    addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                            Log.w(TAG, "Error adding document", e);
-//                                            System.out.println("mata");
-//                                        }
-//                                    });
-//
-//                            System.out.println("Success");
-//                        }
-//                    }).
-//                    addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.w(TAG, "Error adding document", e);
-//                            System.out.println("mata");
-//                        }
-//                    });
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", email);
+        user.put("uid", uid);
+        user.put("reviews", new ArrayList<Review>());
+        user.put("userName", "Not set");
+        user.put("fullName", "Not set");
+        user.put("streetAddress", "Not set");
+        user.put("numberAddress", -1);
+
+        firebaseDatabase.collection("users").document(uid)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "User created successfully!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing the user", e);
+                    }
+                });
+    }
+
+    public void updateUserInformation(String userName, String fullName, String phone, String streetAddress, String numberStreet) {
+        DocumentReference userDocument = firebaseDatabase.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+        int numberOfStreet = Integer.parseInt(numberStreet);
+        userDocument
+                .update(
+                "userName", userName,
+                "fullName",fullName,
+                        "streetAddress", streetAddress,
+                        "phone",phone,
+                        "numberAddress",numberOfStreet
+                )
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document User with " + userDocument.getId() + " has been updated");
+                        authenticationMessage.postValue("Information has been updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating user document " + userDocument.getId(), e);
+                        authenticationMessage.postValue("Information couldn't be updated.");
+                    }
+                });
+    }
+
+    public void setUser(String uid) {
+        returnedUser = new User();
+        if (firebaseAuth.getCurrentUser() != null) {
+            DocumentReference docRef = firebaseDatabase.collection("users").document(uid);
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    returnedUser = documentSnapshot.toObject(User.class);
+                    user.postValue(returnedUser);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    user.postValue(null);
+                    Log.e(TAG, e.getMessage());
+                }
+            });
         }
     }
 
@@ -282,18 +292,15 @@ public class UserDAO {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if(currentUser.getValue() != null)
-                {
+                if (currentUser.getValue() != null) {
                     currentUser.getValue().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful())
-                            {
+                            if (task.isSuccessful()) {
                                 Log.d(TAG, "Email successfully sent!");
                                 authenticationMessage.postValue("Email successfully sent!");
                                 isEmailVerified.postValue(true);
-                            }
-                            else {
+                            } else {
                                 Log.e(TAG, "Error sending the mail. Error: " + task.getException());
                                 authenticationMessage.postValue("Error sending the mail.");
                             }

@@ -3,7 +3,6 @@ package com.project.HotelDoor.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,13 +15,13 @@ import android.widget.Toast;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.project.HotelDoor.HomeFragment;
-import com.project.HotelDoor.MapFragment;
+import com.project.HotelDoor.ui.fragments.AddInformationFragment;
+import com.project.HotelDoor.ui.fragments.HomeFragment;
+import com.project.HotelDoor.ui.fragments.MapFragment;
 import com.project.HotelDoor.R;
-import com.project.HotelDoor.SettingsFragment;
+import com.project.HotelDoor.ui.fragments.SettingsFragment;
 import com.project.HotelDoor.data.Stage;
 import com.project.HotelDoor.ui.fragments.LoginFragment;
-import com.project.HotelDoor.ui.fragments.MainPageFragment;
 import com.project.HotelDoor.ui.fragments.ProfileFragment;
 import com.project.HotelDoor.ui.fragments.RegisterFragment;
 import com.project.HotelDoor.viewmodel.MainActivityViewModel;
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private final MapFragment mapFragment = new MapFragment();
     private final SettingsFragment settingsFragment = new SettingsFragment();
     private final HomeFragment homeFragment = new HomeFragment();
+    private final AddInformationFragment addInformationFragment = new AddInformationFragment();
 
     ProgressBar progressBar;
     private MainActivityViewModel viewmodel;
@@ -139,6 +139,13 @@ public class MainActivity extends AppCompatActivity {
             bottomAppBar.setVisibility(View.INVISIBLE);
             floatingPlus.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void switchAddFragment(View view)
+    {
+        getSupportFragmentManager().
+                beginTransaction().
+                replace(R.id.navigationFragment,addInformationFragment).commit();
     }
 
 //    public void clickProfile(MenuItem item)
