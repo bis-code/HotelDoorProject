@@ -25,3 +25,7 @@ In the last time I was browsing Glassdor and Booking. I was using Glassdor for s
 15.  As a user, I want to be able to comment to a review, such that I can let people know why I disliked or liked a review.
 16.  As a user, I want to receive a role depending on how many reviews I made, such that people would see how active I am.
 17.  As a user, I want to know how much hours I spent on the application and how many reviews I have added until now.
+
+
+## Other links:
+# Jira: https://hoteldoor.atlassian.net/jira/software/c/projects/HOT/boards/1?selectedIssue=HOT-16
