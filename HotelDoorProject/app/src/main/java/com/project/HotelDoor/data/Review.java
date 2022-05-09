@@ -6,20 +6,23 @@ import java.util.List;
 public class Review {
 //    public ArrayList<Comment> comments;
     public String userUID;
-    public String descriptions;
+    public String description;
     public float rate;
+    public int likes;
 
-    public Review(String userUID, String descriptions, float rate) {
+    public Review(String userUID, String description, float rate, int likes) {
 //        this.comments = new ArrayList<>();
         this.userUID = userUID;
-        this.descriptions = descriptions;
+        this.description = description;
         this.rate = rate;
+        this.likes = likes;
     }
 
     public Review() {
         this.userUID = null;
-        this.descriptions = null;
+        this.description = null;
         this.rate = -1;
+        this.likes = 0;
     }
 
 
@@ -40,12 +43,20 @@ public class Review {
         this.userUID = userUID;
     }
 
-    public String getDescriptions() {
-        return descriptions;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setDescriptions(String descriptions) {
-        this.descriptions = descriptions;
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescriptions(String description) {
+        this.description = description;
     }
 
     public float getRate() {

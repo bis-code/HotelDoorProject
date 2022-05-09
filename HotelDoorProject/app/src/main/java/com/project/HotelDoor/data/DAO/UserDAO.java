@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import kotlin.collections.UArraySortingKt;
+
 public class UserDAO {
     private final UserLiveData currentUser;
     private final Application app;
@@ -61,6 +63,7 @@ public class UserDAO {
     private FirebaseFirestore firebaseDatabase;
 
     User returnedUser;
+    User userModal = new User();
 
     private UserDAO(Application app) {
         this.app = app;
@@ -101,17 +104,14 @@ public class UserDAO {
         return progressBar;
     }
 
-     public void setProgressBar(boolean statement)
-    {
+    public void setProgressBar(boolean statement) {
         progressBar.postValue(statement);
     }
 
     public void setAuthenticationMessage(boolean thread, String authenticationMessage) {
-        if(thread)
-        {
+        if (thread) {
             this.authenticationMessage.postValue(authenticationMessage);
-        }
-        else {
+        } else {
             this.authenticationMessage.setValue(authenticationMessage);
         }
     }
@@ -134,55 +134,38 @@ public class UserDAO {
     }
 
     public void registerAccount(Activity activity, String email, String password) {
-        progressBar.setValue(true);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success
-                                    Log.d(TAG, "createUserWithEmail:success");
-                                    authenticationMessage.postValue("User created!");
-                                    createUser(getCurrentUser().getValue().getUid(), email);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    authenticationMessage.postValue("Error on creating user");
-                                }
-                            }
-                        });
-                signOut.postValue(false);
-                progressBar.postValue(false);
-            }
-        }, 3000);
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success
+                            Log.d(TAG, "createUserWithEmail:success");
+                            authenticationMessage.postValue("User created!");
+                            createUser(getCurrentUser().getValue().getUid(), email);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            authenticationMessage.postValue("Error on creating user");
+                        }
+                    }
+                });
+        signOut.postValue(false);
     }
 
     public void loginAccount(Activity activity, String email, String password) {
-        progressBar.setValue(true);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                firebaseAuth.signInWithEmailAndPassword(email, password).
-                        addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    //Sign in success
-                                    Log.d(TAG, "signInUserWithEmail:success");
-                                    authenticationMessage.postValue("You are signed in!");
-                                } else {
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                    authenticationMessage.postValue("Error on signing in");
-                                }
-                            }
-                        });
-                signOut.postValue(false);
-                progressBar.postValue(false);
-            }
-        }, 3000);
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(activity, task -> {
+                    if (task.isSuccessful()) {
+                        //Sign in success
+                        Log.d(TAG, "signInUserWithEmail:success");
+                        authenticationMessage.postValue("You are signed in!");
+                    } else {
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        authenticationMessage.postValue("Error on signing in");
+                    }
+                });
+        signOut.postValue(false);
     }
 
     public void forgotPassword(View view) {
@@ -222,11 +205,6 @@ public class UserDAO {
         passwordResetDialog.create().show();
     }
 
-
-    //TODO: make functionality for updating password, email etc etc.
-    //TODO: make UI design for profile information and update information
-    //TODO: use this method when user's email is verified!!!
-    //TODO: save user ID in a variable that can be used in viewmodels!!
     public void createUser(String uid, String email) {
 
         Map<String, Object> user = new HashMap<>();
@@ -260,11 +238,11 @@ public class UserDAO {
         int numberOfStreet = Integer.parseInt(numberStreet);
         userDocument
                 .update(
-                "userName", userName,
-                "fullName",fullName,
+                        "userName", userName,
+                        "fullName", fullName,
                         "streetAddress", streetAddress,
-                        "phone",phone,
-                        "numberAddress",numberOfStreet
+                        "phone", phone,
+                        "numberAddress", numberOfStreet
                 )
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -287,18 +265,16 @@ public class UserDAO {
         setUser(review.getUserUID());
         User user = this.user.getValue();
         ArrayList<Review> userReviews = null;
-        if(user.getReviews() != null)
-        {
+        if (user.getReviews() != null) {
             userReviews = user.getReviews();
-        }
-        else {
+        } else {
             userReviews = new ArrayList<>();
         }
         userReviews.add(review);
 
         userDocument
                 .update(
-                        "reviews",userReviews
+                        "reviews", userReviews
                 )
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -317,6 +293,7 @@ public class UserDAO {
     }
 
 
+    //used method for old requirements
     public void setUser(String uid) {
         returnedUser = new User();
         if (firebaseAuth.getCurrentUser() != null) {
@@ -335,6 +312,24 @@ public class UserDAO {
                 }
             });
         }
+    }
+
+
+    //new method for getting the user
+    public User getUserModal(String uid) {
+            DocumentReference docRef = firebaseDatabase.collection("users").document(uid);
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    userModal = documentSnapshot.toObject(User.class);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            });
+        return userModal;
     }
 
     public void verifyEmail() {

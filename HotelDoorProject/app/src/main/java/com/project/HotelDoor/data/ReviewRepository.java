@@ -1,14 +1,17 @@
-package com.project.HotelDoor.data.DAO;
+package com.project.HotelDoor.data;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.project.HotelDoor.data.Hotel;
-import com.project.HotelDoor.data.Review;
+import com.project.HotelDoor.data.DAO.ReviewDAO;
+import com.project.HotelDoor.data.DAO.UserDAO;
 
-import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -57,9 +60,22 @@ public class ReviewRepository {
         reviewDAO.postHotel(hotel);
     }
 
+    public ArrayList<Review> getReviews() {
+        return reviewDAO.getReviews();
+    }
+
+//    public void loadReviewData(Context context, Application app, RecyclerView revFeed)
+//    {
+//        reviewDAO.loadReviewData(context,app,revFeed);
+//    }
+
+    public MutableLiveData<Boolean> getProgressBar()
+    {
+        return reviewDAO.getProgressBar();
+    }
+
     public LiveData<FirebaseUser> getCurrentUser()
     {
         return userDAO.getCurrentUser();
     }
-    // TODO: Implement the ViewModel
 }

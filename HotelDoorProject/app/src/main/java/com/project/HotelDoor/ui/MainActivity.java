@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private final AddInformationFragment addInformationFragment = new AddInformationFragment();
     private final PostReviewFragment postReviewFragment = new PostReviewFragment();
 
-    ProgressBar progressBar;
     private MainActivityViewModel viewmodel;
 
     //Bottom Nav Items
@@ -73,21 +72,10 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomAppBar);
         floatingPlus = findViewById(R.id.floatingPlus);
 
-        progressBar = findViewById(R.id.progress_bar);
-
-        viewmodel.getProgressBar().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoading) {
-                int visibility = isLoading ? View.VISIBLE : View.INVISIBLE;
-                progressBar.setVisibility(visibility);
-            }
-        });
-
         viewmodel.getCurrentUser().observe(this, user -> {
             Fragment fragment = null;
             if (user != null) {
                 viewmodel.init(user);
-                stage.setStage("profile");
                 getSupportFragmentManager().beginTransaction().replace(R.id.navigationFragment, homeFragment).commit();
                 makeBottomNavVisible(true);
             } else {
@@ -185,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             PostReviewViewModel postReviewViewModel = new ViewModelProvider(this).get(PostReviewViewModel.class);
             if (postReviewViewModel.getCurrentUser().getValue() != null) {
-                Review review = new Review(postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating());
+                Review review = new Review(postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(),0);
                 Hotel hotel = postReviewViewModel.getHotel(inputHotelName.getText().toString());
                 if (hotel != null) {
                     hotel.getReviews().add(review);

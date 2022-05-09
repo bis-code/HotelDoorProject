@@ -68,12 +68,12 @@ public class RegisterFragment extends Fragment {
                         {
                             Toast.makeText(getActivity(), "Fields cannot be empty..", Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 }
             });
         }
-        if(toLoginButton != null)
-        {
+        if (toLoginButton != null) {
             toLoginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

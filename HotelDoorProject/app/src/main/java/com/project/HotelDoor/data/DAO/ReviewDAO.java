@@ -3,11 +3,15 @@ package com.project.HotelDoor.data.DAO;
 import static android.content.ContentValues.TAG;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,13 +22,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
+import com.project.HotelDoor.R;
 import com.project.HotelDoor.data.Hotel;
 import com.project.HotelDoor.data.Review;
+import com.project.HotelDoor.data.ReviewAdapter;
+import com.project.HotelDoor.data.User;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class ReviewDAO {
@@ -33,15 +45,19 @@ public class ReviewDAO {
     private boolean statement;
     private final UserDAO userDAO;
     private Hotel hotel = null;
+    private ArrayList<Review> reviewsArrayList;
 
     //Firebase Database
     private FirebaseFirestore firebaseDatabase;
+
+    private MutableLiveData<Boolean> getProgressBar = new MutableLiveData<>(false);
 
 
     public ReviewDAO(Application app) {
         this.app = app;
         firebaseDatabase = FirebaseFirestore.getInstance();
         userDAO = UserDAO.getInstance(app);
+        reviewsArrayList = new ArrayList<>();
     }
 
     public static ReviewDAO getInstance(Application application) {
@@ -49,6 +65,10 @@ public class ReviewDAO {
             instance = new ReviewDAO(application);
         }
         return instance;
+    }
+
+    public MutableLiveData<Boolean> getProgressBar() {
+        return getProgressBar;
     }
 
     public void postHotel(Hotel hotel) {
@@ -79,15 +99,13 @@ public class ReviewDAO {
         docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                 if(task.isSuccessful())
-                 {
-                     Hotel returnedHotel = task.getResult().toObject(Hotel.class);
+                if (task.isSuccessful()) {
+                    Hotel returnedHotel = task.getResult().toObject(Hotel.class);
                     hotel = returnedHotel;
-                 }
-                 else {
-                     hotel = null;
-                     Log.e(TAG, task.getException().getMessage());
-                 }
+                } else {
+                    hotel = null;
+                    Log.e(TAG, task.getException().getMessage());
+                }
             }
         });
         return hotel;
@@ -138,16 +156,16 @@ public class ReviewDAO {
 //        return statement;
 ////    }
 
-    public void postReview(Review review, Hotel hotel){
+    public void postReview(Review review, Hotel hotel) {
 
         Map<String, Object> reviewMap = new HashMap<>();
-        if(review.getUserUID() != null || review.getRate() >= 0.0 || review.getDescriptions() != null)
-        {
+        if (review.getUserUID() != null || review.getRate() >= 0.0 || review.getDescription() != null) {
             reviewMap.put("userUID", review.getUserUID());
-            reviewMap.put("description", review.getDescriptions());
+            reviewMap.put("description", review.getDescription());
             reviewMap.put("rate", review.getRate());
+            reviewMap.put("likes", review.getLikes());
             int position = hotel.getReviews().size() - 1;
-            firebaseDatabase.collection("reviews").document(hotel.getName() +  "[" + position  + "] " + review.getUserUID())
+            firebaseDatabase.collection("reviews").document(hotel.getName() + "[" + position + "] " + review.getUserUID())
                     .set(reviewMap)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -164,5 +182,24 @@ public class ReviewDAO {
                         }
                     });
         }
+    }
+
+    public ArrayList<Review> getReviews() {
+        firebaseDatabase.collection("reviews")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Review review = document.toObject(Review.class);
+                                reviewsArrayList.add(review);
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return reviewsArrayList;
     }
 }
