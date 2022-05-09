@@ -18,13 +18,12 @@ In the last time I was browsing Glassdor and Booking. I was using Glassdor for s
 9.  As a user, I want to be able to add also the hotel when I am adding a new review, such that I can be sure that my review can be posted for any hotel I want.
 10.  As a user, I want to see latest post on the main page, such that I will know what holiday I would plan next. 
 11.  As a user, I want to be able to see the location of the hotel, such that I know where is located.
-12.  As a user, I want to be able to post videos and imagines on my review, such that people would know what exactly I liked and not about a specific hotel.
-13.  As a user, I want to be able to see the location of the hotel, such that I know where is located.
+12.  As a user, I want to be able to see the location of the hotel, such that I know where is located.
 ## Low
-14 .  As an administrator, I want to be able to see reviews first hand, such that I can manage them and approve and keep track of those fake.
-15.  As a user, I want to be able to comment to a review, such that I can let people know why I disliked or liked a review.
-16.  As a user, I want to receive a role depending on how many reviews I made, such that people would see how active I am.
-17.  As a user, I want to know how much hours I spent on the application and how many reviews I have added until now.
+13 .  As an administrator, I want to be able to see reviews first hand, such that I can manage them and approve and keep track of those fake.
+14.  As a user, I want to be able to comment to a review, such that I can let people know why I disliked or liked a review.
+15.  As a user, I want to receive a role depending on how many reviews I made, such that people would see how active I am.
+16.  As a user, I want to know how much hours I spent on the application and how many reviews I have added until now.
 
 
 ## Other links:
