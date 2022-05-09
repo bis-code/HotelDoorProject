@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.project.HotelDoor.data.DAO.UserDAO;
 
 public class UserRepository {
     private static UserRepository instance;

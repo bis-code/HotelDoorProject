@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.project.HotelDoor.viewmodel.AddInformationViewModel;
 import com.project.HotelDoor.R;
@@ -55,13 +56,19 @@ public class AddInformationFragment extends Fragment {
         updateInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mViewModel.updateUserInformation(
-                        inputUserName.getText().toString(),
-                        inputFullName.getText().toString(),
-                        inputPhone.getText().toString(),
-                        inputStreetAddress.getText().toString(),
-                        inputStreetNumber.getText().toString()
-                );
+               try{
+                   mViewModel.updateUserInformation(
+                           inputUserName.getText().toString(),
+                           inputFullName.getText().toString(),
+                           inputPhone.getText().toString(),
+                           inputStreetAddress.getText().toString(),
+                           inputStreetNumber.getText().toString()
+                   );
+               }
+               catch (NullPointerException |  NumberFormatException e)
+               {
+                   Toast.makeText(getActivity(), "Fields cannot be empty...", Toast.LENGTH_SHORT).show();
+               }
             }
         });
     }

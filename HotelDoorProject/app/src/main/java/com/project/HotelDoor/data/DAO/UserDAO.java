@@ -1,4 +1,4 @@
-package com.project.HotelDoor.data;
+package com.project.HotelDoor.data.DAO;
 
 import static android.content.ContentValues.TAG;
 
@@ -25,16 +25,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.protobuf.Empty;
+import com.project.HotelDoor.data.Review;
+import com.project.HotelDoor.data.User;
+import com.project.HotelDoor.data.UserLiveData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import kotlin.jvm.internal.markers.KMutableCollection;
 
 public class UserDAO {
     private final UserLiveData currentUser;
@@ -100,6 +99,21 @@ public class UserDAO {
 
     public LiveData<Boolean> getProgressBar() {
         return progressBar;
+    }
+
+     public void setProgressBar(boolean statement)
+    {
+        progressBar.postValue(statement);
+    }
+
+    public void setAuthenticationMessage(boolean thread, String authenticationMessage) {
+        if(thread)
+        {
+            this.authenticationMessage.postValue(authenticationMessage);
+        }
+        else {
+            this.authenticationMessage.setValue(authenticationMessage);
+        }
     }
 
     public LiveData<FirebaseUser> getCurrentUser() {
@@ -242,6 +256,7 @@ public class UserDAO {
 
     public void updateUserInformation(String userName, String fullName, String phone, String streetAddress, String numberStreet) {
         DocumentReference userDocument = firebaseDatabase.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+        //TODO: to if statements if values are null
         int numberOfStreet = Integer.parseInt(numberStreet);
         userDocument
                 .update(
@@ -266,6 +281,41 @@ public class UserDAO {
                     }
                 });
     }
+
+    public void updateUserReviews(Review review) {
+        DocumentReference userDocument = firebaseDatabase.collection("users").document(review.getUserUID());
+        setUser(review.getUserUID());
+        User user = this.user.getValue();
+        ArrayList<Review> userReviews = null;
+        if(user.getReviews() != null)
+        {
+            userReviews = user.getReviews();
+        }
+        else {
+            userReviews = new ArrayList<>();
+        }
+        userReviews.add(review);
+
+        userDocument
+                .update(
+                        "reviews",userReviews
+                )
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document User with " + userDocument.getId() + " has been updated");
+                        authenticationMessage.postValue("Reviews has been updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating user document " + userDocument.getId(), e);
+                        authenticationMessage.postValue("Information couldn't be updated.");
+                    }
+                });
+    }
+
 
     public void setUser(String uid) {
         returnedUser = new User();

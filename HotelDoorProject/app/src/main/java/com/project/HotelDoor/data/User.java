@@ -8,7 +8,7 @@ public class User {
     private String email;
 
     //TODO: change to review object
-    private ArrayList<String> reviews;
+    private ArrayList<Review> reviews;
     private String fullName;
     private String streetAddress;
     private int numberAddress;
@@ -25,7 +25,7 @@ public class User {
         phone = null;
     }
 
-    public User(String uid, String userName, String email, String phone,ArrayList<String> comments, ArrayList<String> reviews, String fullName, String streetAddress, int numberAddress) {
+    public User(String uid, String userName, String email, String phone, ArrayList<Review> reviews, String fullName, String streetAddress, int numberAddress) {
         this.uid = uid;
         this.userName = userName;
         this.phone = phone;
@@ -64,11 +64,11 @@ public class User {
         this.email = email;
     }
 
-    public ArrayList<String> getReviews() {
+    public ArrayList<Review> getReviews() {
         return reviews;
     }
 
-    public void setReviews(ArrayList<String> reviews) {
+    public void setReviews(ArrayList<Review> reviews) {
         this.reviews = reviews;
     }
 

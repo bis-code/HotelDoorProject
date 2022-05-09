@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.project.HotelDoor.R;
 import com.project.HotelDoor.viewmodel.LoginViewModel;
@@ -59,7 +60,13 @@ public class LoginFragment extends Fragment {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    loginViewModel.loginAccount((Activity) view.getContext(),inputEmailLogin.getText().toString(), inputPasswordLogin.getText().toString());
+                    try{
+                        loginViewModel.loginAccount((Activity) view.getContext(),inputEmailLogin.getText().toString(), inputPasswordLogin.getText().toString());
+                    }
+                    catch (NullPointerException e)
+                    {
+                        Toast.makeText(getActivity(), "Fields cannot be empty...", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -68,7 +75,7 @@ public class LoginFragment extends Fragment {
        {
            toRegisterButton.setOnClickListener(new View.OnClickListener() {
                @Override
-               public void onClick(View view) {
+               public void onClick(View view)  {
                    loginViewModel.setSignInPressed(false);
                }
            });

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.project.HotelDoor.R;
 import com.project.HotelDoor.viewmodel.RegisterViewModel;
@@ -59,8 +60,14 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (getView() != null) {
-                        registerViewModel.registerAccount((Activity) getView().getContext(), inputEmail.getText().toString(),
-                                inputPassword.getText().toString());
+                        try{
+                            registerViewModel.registerAccount((Activity) getView().getContext(), inputEmail.getText().toString(),
+                                    inputPassword.getText().toString());
+                        }
+                        catch (NullPointerException e)
+                        {
+                            Toast.makeText(getActivity(), "Fields cannot be empty..", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
