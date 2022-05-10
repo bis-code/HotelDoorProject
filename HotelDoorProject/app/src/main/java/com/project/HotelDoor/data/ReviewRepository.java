@@ -37,17 +37,6 @@ public class ReviewRepository {
         userDAO = UserDAO.getInstance(application);
     }
 
-    public void postReview(Review review, Hotel hotel)
-    {
-         userDAO.setProgressBar(true);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                reviewDAO.postReview(review, hotel);
-                userDAO.setProgressBar(false);
-            }
-        }, 3000);
-    }
     public void updateHotel(Hotel hotel) {
         reviewDAO.updateHotel(hotel);
     }
@@ -59,9 +48,23 @@ public class ReviewRepository {
     {
         reviewDAO.postHotel(hotel);
     }
+//    public Review getReview(String hotelName, String userUID)
+//    {
+//        return reviewDAO.getReview(hotelName, userUID);
+//    }
 
-    public ArrayList<Review> getReviews() {
-        return reviewDAO.getReviews();
+    public void setAuthenticationMessage(boolean thread, String message)
+    {
+        userDAO.setAuthenticationMessage(thread,message);
+    }
+
+//    public ArrayList<Review> getReviews(ArrayList<Hotel> hotels) {
+//        return reviewDAO.getReviews(hotels);
+//    }
+
+    public ArrayList<Hotel> getHotels()
+    {
+        return reviewDAO.getHotels();
     }
 
 //    public void loadReviewData(Context context, Application app, RecyclerView revFeed)

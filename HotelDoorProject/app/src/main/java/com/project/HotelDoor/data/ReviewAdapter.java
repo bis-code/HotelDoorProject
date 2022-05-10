@@ -23,13 +23,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     private ArrayList<Review> reviewArrayList;
     private Context context;
-    private UserDAO userDAO;
+    private UserRepository userRepository;
+    private ReviewRepository reviewRepository;
 
 
     public ReviewAdapter(ArrayList<Review> instaModalArrayList, Context context, Application app) {
         this.reviewArrayList = instaModalArrayList;
         this.context = context;
-        this.userDAO = UserDAO.getInstance(app);
+        this.userRepository = UserRepository.getInstance(app);
+        this.reviewRepository = ReviewRepository.getInstance(app);
     }
 
     @NonNull
@@ -44,7 +46,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ReviewAdapter.ViewHolder holder, int position) {
 
         Review modal = reviewArrayList.get(position);
-        User user = userDAO.getUserModal(modal.getUserUID());
+        User user = userRepository.getUserModal(modal.getUserUID());
+        Hotel hotel = reviewRepository.getHotel(modal.getHotelName() + "[" + position + "]" + user.getUid());
 
         holder.authorTV.setText(user.getUserName());
 //        if (modal.getMedia_type().equals("IMAGE")) {
@@ -52,6 +55,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 //        }
         holder.desctv.setText(modal.getDescription());
         holder.likeTV.setText("" + modal.getLikes() + " likes");
+        holder.hotelName.setText("About " + hotel.getName() + " hotel");
 //        Picasso.get().load(modal.getAuthor_url()).into(holder.authorIV);
     }
 
@@ -66,6 +70,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         private TextView authorTV;
         private TextView likeTV;
         private TextView desctv;
+        private TextView hotelName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,6 +78,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             authorTV = itemView.findViewById(R.id.userNameAuthor);
             likeTV = itemView.findViewById(R.id.likesReview);
             desctv = itemView.findViewById(R.id.reviewDescription);
+            hotelName = itemView.findViewById(R.id.hotelName);
         }
     }
 }

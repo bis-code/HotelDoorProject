@@ -45,7 +45,9 @@ public class ReviewDAO {
     private boolean statement;
     private final UserDAO userDAO;
     private Hotel hotel = null;
+    private Review review = null;
     private ArrayList<Review> reviewsArrayList;
+    private ArrayList<Hotel> hotelArrayList;
 
     //Firebase Database
     private FirebaseFirestore firebaseDatabase;
@@ -58,6 +60,7 @@ public class ReviewDAO {
         firebaseDatabase = FirebaseFirestore.getInstance();
         userDAO = UserDAO.getInstance(app);
         reviewsArrayList = new ArrayList<>();
+        hotelArrayList = new ArrayList<>();
     }
 
     public static ReviewDAO getInstance(Application application) {
@@ -100,8 +103,7 @@ public class ReviewDAO {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    Hotel returnedHotel = task.getResult().toObject(Hotel.class);
-                    hotel = returnedHotel;
+                    hotel = task.getResult().toObject(Hotel.class);
                 } else {
                     hotel = null;
                     Log.e(TAG, task.getException().getMessage());
@@ -110,6 +112,19 @@ public class ReviewDAO {
         });
         return hotel;
     }
+
+//    //prob not using it
+//    public Review getReview(String hotelName, String userUID) {
+//        ArrayList<Review> reviews = getReviews();
+//        for(Review reviewItem : reviews)
+//        {
+//            if(reviewItem.getHotelName().equals(hotelName) && reviewItem.getUserUID().equals(userUID))
+//            {
+//                return reviewItem;
+//            }
+//        }
+//        return null;
+//    }
 
     public void updateHotel(Hotel hotel) {
         DocumentReference hotelDocument = firebaseDatabase.collection("hotels").document(hotel.getName());
@@ -133,73 +148,34 @@ public class ReviewDAO {
                 });
     }
 
-//    public boolean hotelAlreadyExisting(String name) {
-//        DocumentReference docRef = firebaseDatabase.collection("hotels").document(name);
-//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                if(documentSnapshot != null)
-//                {
-//                    statement = true;
-//                }
-//                else {
-//                    statement = false;
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                statement = false;
-//                Log.e(TAG, e.getMessage());
-//            }
-//        });
-//        return statement;
-////    }
-
-    public void postReview(Review review, Hotel hotel) {
-
-        Map<String, Object> reviewMap = new HashMap<>();
-        if (review.getUserUID() != null || review.getRate() >= 0.0 || review.getDescription() != null) {
-            reviewMap.put("userUID", review.getUserUID());
-            reviewMap.put("description", review.getDescription());
-            reviewMap.put("rate", review.getRate());
-            reviewMap.put("likes", review.getLikes());
-            int position = hotel.getReviews().size() - 1;
-            firebaseDatabase.collection("reviews").document(hotel.getName() + "[" + position + "] " + review.getUserUID())
-                    .set(reviewMap)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "Review created successfully!");
-                            userDAO.setAuthenticationMessage(true, "Review created successfully!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error writing the review", e);
-                            userDAO.setAuthenticationMessage(true, "Error writing the review");
-                        }
-                    });
-        }
-    }
-
-    public ArrayList<Review> getReviews() {
-        firebaseDatabase.collection("reviews")
+    public ArrayList<Hotel> getHotels()
+    {
+        hotelArrayList = new ArrayList<>();
+        firebaseDatabase.collection("hotels")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Review review = document.toObject(Review.class);
-                                reviewsArrayList.add(review);
+                                Hotel hotel = document.toObject(Hotel.class);
+                                hotelArrayList.add(hotel);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-        return reviewsArrayList;
+        return hotelArrayList;
     }
+
+//    public ArrayList<Review> getReviews(ArrayList<Hotel> hotelss) {
+//        ArrayList<Hotel> hotels = getHotels();
+//        ArrayList<Review> reviews = new ArrayList<>();
+//        for(Hotel hotel : hotels)
+//        {
+//            reviews.addAll(hotel.getReviews());
+//        }
+//        return reviews;
+//    }
 }

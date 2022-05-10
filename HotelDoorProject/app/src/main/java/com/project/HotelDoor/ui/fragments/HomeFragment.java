@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.project.HotelDoor.R;
+import com.project.HotelDoor.data.Hotel;
 import com.project.HotelDoor.data.Review;
 import com.project.HotelDoor.data.ReviewAdapter;
 import com.project.HotelDoor.viewmodel.HomeViewModel;
@@ -58,7 +59,13 @@ public class HomeFragment extends Fragment {
     }
 
     public void loadReviewData() {
-        ArrayList<Review> reviews = mViewModel.getReviews();
+        ArrayList<Hotel> hotels = mViewModel.getHotels();
+
+        ArrayList<Review> reviews = new ArrayList<>();
+        for(Hotel hotel : hotels)
+        {
+            reviews.addAll(hotel.getReviews());
+        }
         try{
             ReviewAdapter adapter = new ReviewAdapter(reviews, getContext(), getActivity().getApplication());
 

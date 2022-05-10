@@ -86,7 +86,7 @@ public class UserRepository {
         userDAO.updateUserInformation(userName,fullName,phone,streetAddress,numberStreet);
     }
 
-    public User getUser(String uid)
+    public User getUserModal(String uid)
     {
         return userDAO.getUserModal(uid);
     }

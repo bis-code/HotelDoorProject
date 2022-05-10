@@ -20,9 +20,14 @@ public class PostReviewViewModel extends AndroidViewModel {
         reviewRepository = ReviewRepository.getInstance(application);
     }
 
-    public void postReview(Review review, Hotel hotel)
+//    public Review getReview(String hotelName, String userUID)
+//    {
+//        return reviewRepository.getReview(hotelName,userUID);
+//    }
+
+    public void setAuthenticationMessage(boolean thread, String message)
     {
-        reviewRepository.postReview(review, hotel);
+        reviewRepository.setAuthenticationMessage(thread,message);
     }
     public void updateHotel(Hotel hotel) {
         reviewRepository.updateHotel(hotel);

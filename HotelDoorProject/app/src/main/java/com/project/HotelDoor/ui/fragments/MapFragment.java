@@ -16,7 +16,6 @@ import com.project.HotelDoor.R;
 import com.project.HotelDoor.viewmodel.MapViewModel;
 
 public class MapFragment extends Fragment {
-
     private MapViewModel mViewModel;
 
     public static MapFragment newInstance() {

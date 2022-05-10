@@ -9,13 +9,15 @@ public class Review {
     public String description;
     public float rate;
     public int likes;
+    private String hotelName;
 
-    public Review(String userUID, String description, float rate, int likes) {
+    public Review(String hotelName, String userUID, String description, float rate, int likes) {
 //        this.comments = new ArrayList<>();
         this.userUID = userUID;
         this.description = description;
         this.rate = rate;
         this.likes = likes;
+        this.hotelName = hotelName;
     }
 
     public Review() {
@@ -23,6 +25,7 @@ public class Review {
         this.description = null;
         this.rate = -1;
         this.likes = 0;
+        this.hotelName = null;
     }
 
 
@@ -45,6 +48,14 @@ public class Review {
 
     public int getLikes() {
         return likes;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public String getHotelName() {
+        return hotelName;
     }
 
     public void setLikes(int likes) {

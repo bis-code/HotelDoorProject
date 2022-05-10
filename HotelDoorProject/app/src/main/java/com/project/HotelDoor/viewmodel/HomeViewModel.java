@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.HotelDoor.data.DAO.UserDAO;
+import com.project.HotelDoor.data.Hotel;
 import com.project.HotelDoor.data.Review;
 import com.project.HotelDoor.data.ReviewRepository;
 import com.project.HotelDoor.data.User;
@@ -19,20 +20,23 @@ public class HomeViewModel extends AndroidViewModel {
     private UserRepository userRepository;
     private ReviewRepository reviewRepository;
 
-    public HomeViewModel(Application app)
-    {
+    public HomeViewModel(Application app) {
         super(app);
         userRepository = UserRepository.getInstance(app);
         reviewRepository = ReviewRepository.getInstance(app);
     }
 
-    public User getUser(String uid)
-    {
-        return userRepository.getUser(uid);
+    public User getUser(String uid) {
+        return userRepository.getUserModal(uid);
     }
 
-    public ArrayList<Review> getReviews(){
-        return reviewRepository.getReviews();
+//    public ArrayList<Review> getReviews(ArrayList<Hotel> hotel) {
+//        return reviewRepository.getReviews(hotel);
+//    }
+
+    public ArrayList<Hotel> getHotels()
+    {
+        return reviewRepository.getHotels();
     }
 
 //    public void loadReviewData(Context context, Application app, RecyclerView revFeed)

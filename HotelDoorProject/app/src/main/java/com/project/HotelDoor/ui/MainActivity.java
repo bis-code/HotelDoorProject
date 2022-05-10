@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -30,6 +31,7 @@ import com.project.HotelDoor.data.Stage;
 import com.project.HotelDoor.ui.fragments.LoginFragment;
 import com.project.HotelDoor.ui.fragments.ProfileFragment;
 import com.project.HotelDoor.ui.fragments.RegisterFragment;
+import com.project.HotelDoor.viewmodel.AddInformationViewModel;
 import com.project.HotelDoor.viewmodel.MainActivityViewModel;
 import com.project.HotelDoor.viewmodel.PostReviewViewModel;
 
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         floatingPlus = findViewById(R.id.floatingPlus);
 
         viewmodel.getCurrentUser().observe(this, user -> {
-            Fragment fragment = null;
             if (user != null) {
                 viewmodel.init(user);
                 getSupportFragmentManager().beginTransaction().replace(R.id.navigationFragment, homeFragment).commit();
@@ -99,6 +100,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String message) {
                 Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                if(message.equals("Information has been updated!") ||
+                        message.equals("Review created successfully!") ||
+                message.equals("Information for Hotel has been updated!"))
+                {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.navigationFragment, new ProfileFragment()).commit();
+                }
             }
         });
 
@@ -162,46 +169,13 @@ public class MainActivity extends AppCompatActivity {
         //TODO: to make such that when it goes back to home the navigation drawer is set to home item.
     }
 
-    public void postReview(View view) {
-
-        //TODO need to solve those = they are null
-        TextView reviewDescription = view.findViewById(R.id.inputReviewDescription);
-        RatingBar ratingReviewBar = view.findViewById(R.id.ratingReviewBar);
-        TextView inputHotelName =  view.findViewById(R.id.inputHotelName);
-        TextView inputHotelAddress = view.findViewById(R.id.inputHotelAddress);
-
-        try {
-            PostReviewViewModel postReviewViewModel = new ViewModelProvider(this).get(PostReviewViewModel.class);
-            if (postReviewViewModel.getCurrentUser().getValue() != null) {
-                Review review = new Review(postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(),0);
-                Hotel hotel = postReviewViewModel.getHotel(inputHotelName.getText().toString());
-                if (hotel != null) {
-                    hotel.getReviews().add(review);
-                    postReviewViewModel.updateHotel(hotel);
-                } else {
-                    hotel = new Hotel(inputHotelAddress.getText().toString(), inputHotelName.getText().toString(), new ArrayList<Review>());
-                    hotel.getReviews().add(review);
-                    postReviewViewModel.postHotel(hotel);
-                }
-                postReviewViewModel.postReview(review, hotel);
-            }
-
-            getSupportFragmentManager().
-                    beginTransaction().
-                    replace(R.id.navigationFragment, homeFragment).
-                    commit();
-
-        } catch (NullPointerException e) {
-            Toast.makeText(this, "Fields cannot be empty..", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void cancelPostingReview(View view) {
         getSupportFragmentManager().
                 beginTransaction().
                 replace(R.id.navigationFragment, homeFragment).
                 commit();
     }
+
 
 //    public void clickProfile(MenuItem item)
 //    {
