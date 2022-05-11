@@ -52,35 +52,30 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        mViewModel.getReviewsLiveData().observe(getViewLifecycleOwner(), reviews -> {
+            if(!reviews.isEmpty()){
+                try{
+                    ReviewAdapter adapter = new ReviewAdapter(reviews, getContext(), getActivity().getApplication());
 
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+
+                    revFeed.setLayoutManager(linearLayoutManager);
+
+                    revFeed.setAdapter(adapter);
+                }
+
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                    Log.e(TAG, "Error getting reviews data: " + e.getMessage());
+                }
+            }
+        });
         loadReviewData();
-        //todo progressbar
-
     }
 
     public void loadReviewData() {
-        ArrayList<Hotel> hotels = mViewModel.getHotels();
-
-        ArrayList<Review> reviews = new ArrayList<>();
-        for(Hotel hotel : hotels)
-        {
-            reviews.addAll(hotel.getReviews());
-        }
-        try{
-            ReviewAdapter adapter = new ReviewAdapter(reviews, getContext(), getActivity().getApplication());
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-
-            revFeed.setLayoutManager(linearLayoutManager);
-
-            revFeed.setAdapter(adapter);
-        }
-
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            Log.e(TAG, "Error getting reviews data: " + e.getMessage());
-        }
+        mViewModel.getReviews();
     }
 
 }

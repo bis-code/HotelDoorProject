@@ -47,7 +47,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
         Review modal = reviewArrayList.get(position);
         User user = userRepository.getUserModal(modal.getUserUID());
-        Hotel hotel = reviewRepository.getHotel(modal.getHotelName() + "[" + position + "]" + user.getUid());
 
         holder.authorTV.setText(user.getUserName());
 //        if (modal.getMedia_type().equals("IMAGE")) {
@@ -55,7 +54,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 //        }
         holder.desctv.setText(modal.getDescription());
         holder.likeTV.setText("" + modal.getLikes() + " likes");
-        holder.hotelName.setText("About " + hotel.getName() + " hotel");
+        holder.hotelName.setText("About " + modal.getHotelName() + " hotel");
 //        Picasso.get().load(modal.getAuthor_url()).into(holder.authorIV);
     }
 

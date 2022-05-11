@@ -62,10 +62,27 @@ public class ReviewRepository {
 //        return reviewDAO.getReviews(hotels);
 //    }
 
-    public ArrayList<Hotel> getHotels()
+    public void getHotels()
     {
-        return reviewDAO.getHotels();
+        reviewDAO.getHotels();
     }
+
+    public void getReviews()
+    {
+        reviewDAO.getReviews();
+    }
+
+    public MutableLiveData<ArrayList<Hotel>> getHotelsLiveData()
+
+    {
+        return reviewDAO.getHotelsLiveData();
+    }
+
+    public MutableLiveData<ArrayList<Review>> getReviewsLiveData()
+    {
+        return reviewDAO.getReviewsLiveData();
+    }
+
 
 //    public void loadReviewData(Context context, Application app, RecyclerView revFeed)
 //    {

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,9 +35,24 @@ public class HomeViewModel extends AndroidViewModel {
 //        return reviewRepository.getReviews(hotel);
 //    }
 
-    public ArrayList<Hotel> getHotels()
+    public void getHotels()
     {
-        return reviewRepository.getHotels();
+        reviewRepository.getHotels();
+    }
+
+    public void getReviews()
+    {
+        reviewRepository.getReviews();
+    }
+
+    public MutableLiveData<ArrayList<Hotel>> getHotelsLiveData()
+    {
+        return reviewRepository.getHotelsLiveData();
+    }
+
+    public MutableLiveData<ArrayList<Review>> getReviewsLiveData()
+    {
+        return reviewRepository.getReviewsLiveData();
     }
 
 //    public void loadReviewData(Context context, Application app, RecyclerView revFeed)
