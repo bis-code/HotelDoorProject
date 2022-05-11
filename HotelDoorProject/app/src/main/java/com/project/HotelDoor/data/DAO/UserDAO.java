@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.project.HotelDoor.data.Review;
+import com.project.HotelDoor.data.Role;
 import com.project.HotelDoor.data.User;
 import com.project.HotelDoor.data.UserLiveData;
 
@@ -215,6 +216,7 @@ public class UserDAO {
         user.put("fullName", "Not set");
         user.put("streetAddress", "Not set");
         user.put("numberAddress", -1);
+        user.put("role", Role.MEMBER);
 
         firebaseDatabase.collection("users").document(uid)
                 .set(user)
@@ -234,15 +236,41 @@ public class UserDAO {
 
     public void updateUserInformation(String userName, String fullName, String phone, String streetAddress, String numberStreet) {
         DocumentReference userDocument = firebaseDatabase.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-        //TODO: to if statements if values are null
         int numberOfStreet = Integer.parseInt(numberStreet);
+        if(userName != null)
+        {
+            updateUser("userName",userName);
+        }
+        if(fullName != null){
+            updateUser("fullName",fullName);
+        }
+        if(phone != null){
+            updateUser("phone",phone);
+        }
+        if(streetAddress != null)
+        {
+            updateUser("streetAddress",streetAddress);
+        }
+        if(numberStreet != null){
+            updateUser("numberStreet",numberOfStreet);
+        }
+    }
+
+    public void updateRole(Role role)
+    {
+        switch (role)
+        {
+            case ADMIN : updateUser("role",Role.ADMIN); break;
+            case MEMBER : updateUser("role",Role.MEMBER); break;
+        }
+    }
+
+    private void updateUser(String column, Object object)
+    {
+        DocumentReference userDocument = firebaseDatabase.collection("users").document(firebaseAuth.getCurrentUser().getUid());
         userDocument
                 .update(
-                        "userName", userName,
-                        "fullName", fullName,
-                        "streetAddress", streetAddress,
-                        "phone", phone,
-                        "numberAddress", numberOfStreet
+                        column,object
                 )
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

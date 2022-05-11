@@ -6,13 +6,12 @@ public class User {
     private String uid;
     private String userName;
     private String email;
-
-    //TODO: change to review object
     private ArrayList<Review> reviews;
     private String fullName;
     private String streetAddress;
     private int numberAddress;
     private String phone;
+    private Role role;
 
     public User(String uid, String userName) {
         this.uid = uid;
@@ -23,9 +22,10 @@ public class User {
         streetAddress = null;
         numberAddress = -1;
         phone = null;
+        role = Role.MEMBER;
     }
 
-    public User(String uid, String userName, String email, String phone, ArrayList<Review> reviews, String fullName, String streetAddress, int numberAddress) {
+    public User(Role role, String uid, String userName, String email, String phone, ArrayList<Review> reviews, String fullName, String streetAddress, int numberAddress) {
         this.uid = uid;
         this.userName = userName;
         this.phone = phone;
@@ -34,6 +34,7 @@ public class User {
         this.fullName = fullName;
         this.streetAddress = streetAddress;
         this.numberAddress = numberAddress;
+        this.role = role;
     }
 
     public User()
@@ -58,6 +59,14 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public void setEmail(String email) {

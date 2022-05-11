@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 beginTransaction().
                 replace(R.id.navigationFragment, homeFragment).
                 commit();
+
     }
 
 

@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         revFeed = view.findViewById(R.id.idReviewFeeds);
-
+        revFeed.hasFixedSize();
         return view;
     }
 

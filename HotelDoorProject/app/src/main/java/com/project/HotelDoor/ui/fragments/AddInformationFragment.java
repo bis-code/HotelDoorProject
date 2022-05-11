@@ -69,6 +69,13 @@ public class AddInformationFragment extends Fragment {
                {
                    Toast.makeText(getActivity(), "Fields cannot be empty...", Toast.LENGTH_SHORT).show();
                }
+               finally {
+                   inputUserName.setText("");
+                   inputFullName.setText("");
+                   inputPhone.setText("");
+                   inputStreetAddress.setText("");
+                   inputStreetNumber.setText("");
+               }
             }
         });
     }
