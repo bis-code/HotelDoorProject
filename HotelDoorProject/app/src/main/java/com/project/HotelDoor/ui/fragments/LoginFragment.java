@@ -1,14 +1,18 @@
 package com.project.HotelDoor.ui.fragments;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.common.api.ApiException;
 import com.project.HotelDoor.R;
 import com.project.HotelDoor.viewmodel.LoginViewModel;
 
@@ -30,6 +36,9 @@ public class LoginFragment extends Fragment {
     Button loginButton;
     Button toRegisterButton;
     TextView forgotPasswordLogin;
+
+    private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
+    private boolean showOneTapUI = true;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();

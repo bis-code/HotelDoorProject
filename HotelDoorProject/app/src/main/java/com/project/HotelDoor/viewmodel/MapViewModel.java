@@ -9,17 +9,20 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.maps.MapView;
 import com.project.HotelDoor.data.Hotel;
 import com.project.HotelDoor.data.ReviewRepository;
+import com.project.HotelDoor.data.UserRepository;
 
 import java.util.ArrayList;
 
 public class MapViewModel extends AndroidViewModel {
 
     private ReviewRepository reviewRepository;
+    private UserRepository userRepository;
 
     public MapViewModel(Application app)
     {
         super(app);
         reviewRepository = ReviewRepository.getInstance(app);
+        userRepository = UserRepository.getInstance(app);
     }
 
     public void getHotels()
@@ -39,5 +42,13 @@ public class MapViewModel extends AndroidViewModel {
     public void getHotel(String name)
     {
         reviewRepository.getHotel(name);
+    }
+    public void setHotelNameLiveData(String hotelName) {
+        reviewRepository.setHotelNameLiveData(hotelName);
+    }
+
+    public void setAuthenticationMessage(boolean thread, String message)
+    {
+        reviewRepository.setAuthenticationMessage(thread,message);
     }
 }

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -70,36 +71,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        // TODO: Use the ViewModel
+
+        viewReviews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.navigationFragment, new HotelReviewsFragment()).commit();
+            }
+        });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        mViewModel.getHotels();
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-        mViewModel.getHotelsLiveData().observe(getViewLifecycleOwner(), hotels ->
-        {
-            for(Hotel hotel : hotels)
+        try{
+            this.googleMap = googleMap;
+            mViewModel.getHotels();
+            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+            mViewModel.getHotelsLiveData().observe(getViewLifecycleOwner(), hotels ->
             {
-                try {
-                    List<Address> addressList = geocoder.getFromLocationName(hotel.getAddress(),1);
+                for(Hotel hotel : hotels)
+                {
+                    List<Address> addressList = null;
+                    try {
+                        addressList = geocoder.getFromLocationName(hotel.getAddress(),1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     if(addressList != null && addressList.size() > 0)
-                    {
-                        Address address = addressList.get(0);
-                        LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(hotel.getName()));
+                        {
+                            Address address = addressList.get(0);
+                            LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+                            googleMap.addMarker(new MarkerOptions().position(latLng).title(hotel.getName()));
 
-                        googleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
+                            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
 
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG,"Cannot get geographic points of location..");
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        }
                 }
-            }
-        });
+            });
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getActivity(), "An error appeared: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
 
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -115,6 +130,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         numberOfReviews.setText("Reviews: " + hotel.getReviews().size());
                         addressOfHotel.setText("Address: " + hotel.getAddress());
                         detailsHotel.setVisibility(View.VISIBLE);
+                        mViewModel.setHotelNameLiveData(hotel.getName());
                     }
                 });
 

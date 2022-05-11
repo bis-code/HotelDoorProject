@@ -55,6 +55,7 @@ public class ReviewDAO {
     private MutableLiveData<ArrayList<Review>> reviewsLiveData = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<ArrayList<Hotel>> hotelsLiveData = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Hotel> hotel = new MutableLiveData<>(null);
+    private MutableLiveData<String> hotelNameLiveData = new MutableLiveData<>(null);
 
     public ReviewDAO(Application app) {
         this.app = app;
@@ -86,6 +87,15 @@ public class ReviewDAO {
     public MutableLiveData<Hotel> getHotelLiveData()
     {
         return hotel;
+    }
+
+    public MutableLiveData<String> getHotelNameLiveData()
+    {
+        return hotelNameLiveData;
+    }
+
+    public void setHotelNameLiveData(String hotelName) {
+        this.hotelNameLiveData.postValue(hotelName);
     }
 
     public void postHotel(Hotel hotel) {
@@ -125,6 +135,7 @@ public class ReviewDAO {
                 }
             }
         });
+
     }
 
 //    //prob not using it

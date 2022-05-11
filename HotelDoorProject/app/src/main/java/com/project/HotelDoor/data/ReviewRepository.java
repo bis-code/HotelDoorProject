@@ -83,6 +83,15 @@ public class ReviewRepository {
         return reviewDAO.getReviewsLiveData();
     }
 
+    public MutableLiveData<String> getHotelNameLiveData()
+    {
+        return reviewDAO.getHotelNameLiveData();
+    }
+
+    public void setHotelNameLiveData(String hotelName) {
+        reviewDAO.setHotelNameLiveData(hotelName);
+    }
+
     public MutableLiveData<Hotel> getHotelLiveData()
     {
         return reviewDAO.getHotelLiveData();
