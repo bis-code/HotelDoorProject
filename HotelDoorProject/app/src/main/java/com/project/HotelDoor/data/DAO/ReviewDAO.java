@@ -44,7 +44,6 @@ public class ReviewDAO {
     private final Application app;
     private boolean statement;
     private final UserDAO userDAO;
-    private Hotel hotel = null;
     private Review review = null;
     private ArrayList<Review> reviewsArrayList = new ArrayList<>();
     private ArrayList<Hotel> hotelsArrayList = new ArrayList<>();
@@ -55,7 +54,7 @@ public class ReviewDAO {
     private MutableLiveData<Boolean> getProgressBar = new MutableLiveData<>(false);
     private MutableLiveData<ArrayList<Review>> reviewsLiveData = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<ArrayList<Hotel>> hotelsLiveData = new MutableLiveData<>(new ArrayList<>());
-
+    private MutableLiveData<Hotel> hotel = new MutableLiveData<>(null);
 
     public ReviewDAO(Application app) {
         this.app = app;
@@ -84,6 +83,11 @@ public class ReviewDAO {
         return hotelsLiveData;
     }
 
+    public MutableLiveData<Hotel> getHotelLiveData()
+    {
+        return hotel;
+    }
+
     public void postHotel(Hotel hotel) {
         Map<String, Object> hotelMap = new HashMap<>();
         hotelMap.put("name", hotel.getName());
@@ -106,21 +110,21 @@ public class ReviewDAO {
                 });
     }
 
-    public Hotel getHotel(String name) {
+    public void getHotel(String name) {
         DocumentReference docRef = firebaseDatabase.collection("hotels").document(name);
         Source source = Source.CACHE;
         docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    hotel = task.getResult().toObject(Hotel.class);
+                    Hotel hotelToBeSet = task.getResult().toObject(Hotel.class);
+                    hotel.postValue(hotelToBeSet);
                 } else {
-                    hotel = null;
+                    hotel.postValue(null);
                     Log.e(TAG, task.getException().getMessage());
                 }
             }
         });
-        return hotel;
     }
 
 //    //prob not using it

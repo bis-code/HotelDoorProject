@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.project.HotelDoor.data.ReviewRepository;
@@ -32,9 +33,14 @@ public class PostReviewViewModel extends AndroidViewModel {
     public void updateHotel(Hotel hotel) {
         reviewRepository.updateHotel(hotel);
     }
-    public Hotel getHotel(String name)
+    public void getHotel(String name)
     {
-        return reviewRepository.getHotel(name);
+        reviewRepository.getHotel(name);
+    }
+
+    public MutableLiveData<Hotel> getHotelLiveData()
+    {
+        return reviewRepository.getHotelLiveData();
     }
     public void postHotel(Hotel hotel)
     {

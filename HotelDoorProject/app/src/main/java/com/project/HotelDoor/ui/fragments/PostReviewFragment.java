@@ -62,18 +62,23 @@ public class PostReviewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (postReviewViewModel.getCurrentUser().getValue() != null) {
-                    Hotel hotel = postReviewViewModel.getHotel(inputHotelName.getText().toString());
-                    Review review;
-                    if (hotel != null) {
-                        review = new Review(hotel.getName(),postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(), 0);
-                        hotel.getReviews().add(review);
-                        postReviewViewModel.updateHotel(hotel);
-                    } else {
-                        hotel = new Hotel(inputHotelAddress.getText().toString(), inputHotelName.getText().toString(), new ArrayList<Review>());
-                        review = new Review(hotel.getName(),postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(), 0);
-                        hotel.getReviews().add(review);
-                        postReviewViewModel.postHotel(hotel);
-                    }
+                    postReviewViewModel.getHotel(inputHotelName.getText().toString());
+                    postReviewViewModel.getHotelLiveData().observe(getViewLifecycleOwner(), hotel -> {
+                        Review review;
+                        if(hotel != null)
+                        {
+                                review = new Review(hotel.getName(),postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(), 0);
+                                hotel.getReviews().add(review);
+                                postReviewViewModel.updateHotel(hotel);
+                        }
+                        else {
+                            Hotel newHotel = new Hotel(inputHotelAddress.getText().toString(), inputHotelName.getText().toString(), new ArrayList<Review>());
+                            review = new Review(newHotel.getName(),postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(), 0);
+                            newHotel.getReviews().add(review);
+                            postReviewViewModel.postHotel(newHotel);
+                        }
+                    });
+
                 }
             }
         });

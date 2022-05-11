@@ -40,9 +40,9 @@ public class ReviewRepository {
     public void updateHotel(Hotel hotel) {
         reviewDAO.updateHotel(hotel);
     }
-    public Hotel getHotel(String name)
+    public void getHotel(String name)
     {
-        return reviewDAO.getHotel(name);
+        reviewDAO.getHotel(name);
     }
     public void postHotel(Hotel hotel)
     {
@@ -83,6 +83,10 @@ public class ReviewRepository {
         return reviewDAO.getReviewsLiveData();
     }
 
+    public MutableLiveData<Hotel> getHotelLiveData()
+    {
+        return reviewDAO.getHotelLiveData();
+    }
 
 //    public void loadReviewData(Context context, Application app, RecyclerView revFeed)
 //    {
