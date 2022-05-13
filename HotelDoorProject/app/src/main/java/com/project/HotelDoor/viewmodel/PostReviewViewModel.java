@@ -66,6 +66,10 @@ public class PostReviewViewModel extends AndroidViewModel {
     {
         userRepository.setUser(uid);
     }
+    public void updateUser(String column, Object object)
+    {
+        userRepository.updateUser(column,object);
+    }
 
     public void updateRole(Role role)
     {

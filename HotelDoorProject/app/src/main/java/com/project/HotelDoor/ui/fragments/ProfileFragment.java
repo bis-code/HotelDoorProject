@@ -146,7 +146,7 @@ public class ProfileFragment extends Fragment {
                     username.setText(user.getUserName());
                     myRole.setText(user.getRole().name());
                     //TODO: to be implemented
-                    likes.setText(0);
+                    likes.setText("0");
                 }
             }
         });

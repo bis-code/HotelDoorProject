@@ -80,29 +80,32 @@ public class PostReviewFragment extends Fragment {
                             newHotel.getReviews().add(review);
                             postReviewViewModel.postHotel(newHotel);
                         }
-                    });
-                    //verify reviews post by user
-                    postReviewViewModel.setUser(postReviewViewModel.getCurrentUser().getValue().getUid());
+                        //verify reviews post by user
+                        postReviewViewModel.setUser(postReviewViewModel.getCurrentUser().getValue().getUid());
 
-                    postReviewViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-                        if(user != null)
-                        {
-                            if(user.getReviews() > 10 && user.getReviews() <= 15)
+                        postReviewViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+                            if(user != null)
                             {
-                                postReviewViewModel.updateRole(Role.ACTIVE);
+                                int reviews = user.getReviews() + 1;
+                                user.setReviews(reviews);
+                                postReviewViewModel.updateUser("reviews",reviews);
+                                if(user.getReviews() > 10 && user.getReviews() <= 15)
+                                {
+                                    postReviewViewModel.updateRole(Role.ACTIVE);
+                                }
+                                else if(user.getReviews() > 15 && user.getReviews() <= 20)
+                                {
+                                    postReviewViewModel.updateRole(Role.LEGEND);
+                                }
+                                else if(user.getReviews() > 20)
+                                {
+                                    postReviewViewModel.updateRole(Role.TRIPADVISOR);
+                                }
+                                else {
+                                    postReviewViewModel.updateRole(Role.MEMBER);
+                                }
                             }
-                            else if(user.getReviews() > 15 && user.getReviews() <= 20)
-                            {
-                                postReviewViewModel.updateRole(Role.LEGEND);
-                            }
-                            else if(user.getReviews() > 20)
-                            {
-                                postReviewViewModel.updateRole(Role.TRIPADVISOR);
-                            }
-                            else {
-                                postReviewViewModel.updateRole(Role.MEMBER);
-                            }
-                        }
+                        });
                     });
                 }
             }

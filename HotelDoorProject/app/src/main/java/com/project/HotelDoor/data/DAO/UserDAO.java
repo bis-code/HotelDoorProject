@@ -295,7 +295,7 @@ public class UserDAO {
         }
     }
 
-    private void updateUser(String column, Object object)
+    public void updateUser(String column, Object object)
     {
         DocumentReference userDocument = firebaseDatabase.collection("users").document(firebaseAuth.getCurrentUser().getUid());
         userDocument
