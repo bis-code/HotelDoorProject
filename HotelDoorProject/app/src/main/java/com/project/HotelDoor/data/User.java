@@ -6,7 +6,7 @@ public class User {
     private String uid;
     private String userName;
     private String email;
-    private ArrayList<Review> reviews;
+    private int reviews;
     private String fullName;
     private String streetAddress;
     private int numberAddress;
@@ -17,7 +17,7 @@ public class User {
         this.uid = uid;
         this.userName = userName;
         email = null;
-        reviews = new ArrayList<>();
+        reviews = 0;
         fullName = null;
         streetAddress = null;
         numberAddress = -1;
@@ -25,7 +25,7 @@ public class User {
         role = Role.MEMBER;
     }
 
-    public User(Role role, String uid, String userName, String email, String phone, ArrayList<Review> reviews, String fullName, String streetAddress, int numberAddress) {
+    public User(Role role, String uid, String userName, String email, String phone, int reviews, String fullName, String streetAddress, int numberAddress) {
         this.uid = uid;
         this.userName = userName;
         this.phone = phone;
@@ -73,11 +73,11 @@ public class User {
         this.email = email;
     }
 
-    public ArrayList<Review> getReviews() {
+    public int getReviews() {
         return reviews;
     }
 
-    public void setReviews(ArrayList<Review> reviews) {
+    public void setReviews(int reviews) {
         this.reviews = reviews;
     }
 

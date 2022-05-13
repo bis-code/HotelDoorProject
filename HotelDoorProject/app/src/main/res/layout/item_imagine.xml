@@ -60,9 +60,9 @@
                     android:layout_height="match_parent" />
 
                 <TextView
-                    android:id="@+id/myComments"
+                    android:id="@+id/myRole"
                     android:layout_weight="1"
-                    android:text="Comments"
+                    android:text="role"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textSize="14sp"
@@ -76,9 +76,9 @@
                     android:layout_height="match_parent" />
 
                 <TextView
-                    android:id="@+id/hoursSpent"
+                    android:id="@+id/likes"
                     android:layout_weight="1"
-                    android:text="hoursSpent"
+                    android:text="Likes"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:textSize="14sp"

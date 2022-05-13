@@ -16,8 +16,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.project.HotelDoor.data.Hotel;
 import com.project.HotelDoor.data.Review;
+import com.project.HotelDoor.data.Role;
+import com.project.HotelDoor.data.User;
 import com.project.HotelDoor.viewmodel.PostReviewViewModel;
 import com.project.HotelDoor.R;
 
@@ -78,7 +81,29 @@ public class PostReviewFragment extends Fragment {
                             postReviewViewModel.postHotel(newHotel);
                         }
                     });
+                    //verify reviews post by user
+                    postReviewViewModel.setUser(postReviewViewModel.getCurrentUser().getValue().getUid());
 
+                    postReviewViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+                        if(user != null)
+                        {
+                            if(user.getReviews() > 10 && user.getReviews() <= 15)
+                            {
+                                postReviewViewModel.updateRole(Role.ACTIVE);
+                            }
+                            else if(user.getReviews() > 15 && user.getReviews() <= 20)
+                            {
+                                postReviewViewModel.updateRole(Role.LEGEND);
+                            }
+                            else if(user.getReviews() > 20)
+                            {
+                                postReviewViewModel.updateRole(Role.TRIPADVISOR);
+                            }
+                            else {
+                                postReviewViewModel.updateRole(Role.MEMBER);
+                            }
+                        }
+                    });
                 }
             }
         });

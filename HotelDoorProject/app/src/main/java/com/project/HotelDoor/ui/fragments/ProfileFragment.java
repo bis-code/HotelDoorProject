@@ -43,6 +43,8 @@ public class ProfileFragment extends Fragment {
     TextView address;
     TextView name;
     TextView username;
+    TextView likes;
+    TextView myRole;
 
     User user;
 
@@ -73,6 +75,10 @@ public class ProfileFragment extends Fragment {
         myReviews = view.findViewById(R.id.myReviews);
         addInformationText = view.findViewById(R.id.addInformationText);
         addInformation = view.findViewById(R.id.addInformation);
+        myRole = view.findViewById(R.id.myRole);
+
+        //TODO: to be implemented
+        likes = view.findViewById(R.id.likes);
 
 
         return view;
@@ -138,6 +144,9 @@ public class ProfileFragment extends Fragment {
                     address.setText(user.getStreetAddress() + " " + user.getNumberAddress());
                     name.setText(user.getFullName());
                     username.setText(user.getUserName());
+                    myRole.setText(user.getRole().name());
+                    //TODO: to be implemented
+                    likes.setText(0);
                 }
             }
         });

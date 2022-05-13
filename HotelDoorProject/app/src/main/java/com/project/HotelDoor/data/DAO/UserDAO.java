@@ -283,6 +283,15 @@ public class UserDAO {
             case MEMBER:
                 updateUser("role", Role.MEMBER);
                 break;
+            case ACTIVE:
+                updateUser("role", Role.ACTIVE);
+                break;
+            case TRIPADVISOR:
+                updateUser("role", Role.TRIPADVISOR);
+                break;
+            case LEGEND:
+                updateUser("role", Role.LEGEND);
+                break;
         }
     }
 

@@ -65,9 +65,9 @@ public class AddInformationFragment extends Fragment {
                            inputStreetNumber.getText().toString()
                    );
                }
-               catch (NullPointerException |  NumberFormatException e)
+               catch (NumberFormatException e)
                {
-                   Toast.makeText(getActivity(), "Fields cannot be empty...", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(getActivity(), "Input wrote wrong (number)", Toast.LENGTH_SHORT).show();
                }
                finally {
                    inputUserName.setText("");
