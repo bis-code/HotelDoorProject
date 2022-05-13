@@ -30,3 +30,8 @@ In the last time I was browsing Glassdor and Booking. I was using Glassdor for s
 
 ## Other links:
 # Jira: https://hoteldoor.atlassian.net/jira/software/c/projects/HOT/boards/1?selectedIssue=HOT-16
+# References:
+Post feed: https://www.geeksforgeeks.org/how-to-build-an-instagram-like-custom-recyclerview-in-android/?ref=gcse
+Google authentication: https://www.youtube.com/watch?v=bBJF1M5h_UU
+Profile UI: https://www.youtube.com/watch?v=BCZUdl3CXKM&t=25s
+Multiple markers and implementation of Google Maps: https://www.geeksforgeeks.org/how-to-add-multiple-markers-on-google-maps-in-android/?ref=gcse
