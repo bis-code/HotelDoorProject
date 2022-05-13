@@ -22,9 +22,10 @@ In the last time I was browsing Glassdor and Booking. I was using Glassdor for s
 13.  As a user, I want to see all reviews of a specific hotel.
 ## Low
 14.  As an administrator, I want to be able to see reviews first hand, such that I can manage them and approve and keep track of those fake.
-15.  As a user, I want to be able to comment to a review, such that I can let people know why I disliked or liked a review.
+15.  As a user, I want to be able to like a review, such that other users would know what reviews are better and not.
 16.  As a user, I want to receive a role depending on how many reviews I made, such that people would see how active I am.
-17.  As a user, I want to know how much hours I spent on the application and how many reviews I have added until now.
+17.  As a user, I want to have my role displayed on the profile page such that I would know how much reviews I have to post more until I get the next role.
+18.  As a user, I want to see the information regarding the user's role and how can I advance to the next role. 
 
 
 ## Other links:
