@@ -31,16 +31,6 @@
                     android:src="@drawable/ic_arrow"
                     android:onClick="onArrowBack"/>
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/logoutButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="LOGOUT" />
-            </RelativeLayout>
 
         </LinearLayout>
         <LinearLayout
@@ -55,7 +45,7 @@
                 android:textStyle="normal"
                 android:layout_marginStart="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
             <TextView
                 android:id="@+id/updateUsername"
                 android:text="username"
@@ -64,41 +54,49 @@
                 android:textStyle="bold"
                 android:layout_marginStart="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
     </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <include
                 android:id="@+id/imagineCardView"
                 layout="@layout/item_imagine"
-                android:layout_width="395dp"
+                android:layout_width="match_parent"
                 android:layout_height="218dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp" />
 
             <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/verifyEmail"
                 layout="@layout/item_mailverify" />
 
             <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/addInformationCardView"
                 layout="@layout/item_add" />
 
             <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/infoCardView"
                 layout="@layout/item_info" />
 
             <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/emailCardView"
                 layout="@layout/item_email" />
         </LinearLayout>

@@ -56,7 +56,6 @@ public class AddInformationFragment extends Fragment {
         updateInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               try{
                    mViewModel.updateUserInformation(
                            inputUserName.getText().toString(),
                            inputFullName.getText().toString(),
@@ -64,18 +63,11 @@ public class AddInformationFragment extends Fragment {
                            inputStreetAddress.getText().toString(),
                            inputStreetNumber.getText().toString()
                    );
-               }
-               catch (NumberFormatException e)
-               {
-                   Toast.makeText(getActivity(), "Input wrote wrong (number)", Toast.LENGTH_SHORT).show();
-               }
-               finally {
                    inputUserName.setText("");
                    inputFullName.setText("");
                    inputPhone.setText("");
                    inputStreetAddress.setText("");
                    inputStreetNumber.setText("");
-               }
             }
         });
     }

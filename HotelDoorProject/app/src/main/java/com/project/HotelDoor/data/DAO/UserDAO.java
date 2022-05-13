@@ -237,6 +237,7 @@ public class UserDAO {
         user.put("streetAddress", "Not set");
         user.put("numberAddress", -1);
         user.put("role", Role.MEMBER);
+        user.put("likes",0);
 
         firebaseDatabase.collection("users").document(uid)
                 .set(user)
@@ -255,22 +256,22 @@ public class UserDAO {
     }
 
     public void updateUserInformation(String userName, String fullName, String phone, String streetAddress, String numberStreet) {
-        int numberOfStreet = Integer.parseInt(numberStreet);
-        if(userName != null)
+        if(userName != null && !userName.isEmpty())
         {
             updateUser("userName",userName);
         }
-        if(fullName != null){
+        if(fullName != null && !fullName.isEmpty()){
             updateUser("fullName",fullName);
         }
-        if(phone != null){
+        if(phone != null && !phone.isEmpty()){
             updateUser("phone",phone);
         }
-        if(streetAddress != null)
+        if(streetAddress != null && !streetAddress.isEmpty())
         {
             updateUser("streetAddress",streetAddress);
         }
-        if(numberStreet != null){
+        if(numberStreet != null && !numberStreet.isEmpty()){
+            int numberOfStreet = Integer.parseInt(numberStreet);
             updateUser("numberStreet",numberOfStreet);
         }
     }

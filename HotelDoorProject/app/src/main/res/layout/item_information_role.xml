@@ -5,22 +5,19 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="393dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
+        app:cardCornerRadius="20dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/white"
         app:cardMaxElevation="12dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -35,28 +32,35 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="5dp"
                     android:padding="2dp"
-                    android:src="@drawable/ic_phone" />
+                    android:src="@drawable/ic_info" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Mobile"
+                    android:text="Information about roles"
                     android:textColor="#605E5E"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/updateMobile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginBottom="15dp"
-                android:text="+45 notset"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:id="@+id/memberRole"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="25dp"
+                   android:layout_marginBottom="15dp"
+                   android:text=" - You can get member role once you register.\n - You can get active role after 10 review posts.\n - You can legend role after 15 review posts.\n - You can get tripadvisor role after 20 review posts. "
+                   android:textColor="@color/black"
+                   android:textSize="15sp"
+                   android:textStyle="italic" />
+           </LinearLayout>
         </LinearLayout>
+
+
     </androidx.cardview.widget.CardView>
+
 </RelativeLayout>

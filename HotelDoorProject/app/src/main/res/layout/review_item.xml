@@ -53,16 +53,34 @@
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/unnamed" />
 
-    <TextView
-        android:id="@+id/likesReview"
+    <LinearLayout
+        android:id="@+id/likeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/idIVPost"
-        android:layout_margin="6dp"
-        android:padding="5dp"
-        android:text="likes"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
+        android:layout_below="@id/idIVPost">
+        <ImageView
+            android:id="@+id/likeReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_like"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
+            android:padding="5dp"/>
+        <TextView
+            android:id="@+id/likesReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
+            android:padding="5dp"
+            android:text="likes"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <!--text view to display the caption
         in instagram post-->
@@ -70,8 +88,11 @@
         android:id="@+id/reviewDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/likesReview"
-        android:layout_margin="6dp"
+        android:layout_below="@id/likeLayout"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
         android:padding="5dp"
         android:textColor="@color/black"
         android:textSize="11sp" />

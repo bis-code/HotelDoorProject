@@ -72,6 +72,15 @@ public class ReviewRepository {
         reviewDAO.getReviews();
     }
 
+    public MutableLiveData<Review> getReviewLiveData() {
+        return reviewDAO.getReviewLiveData();
+    }
+
+    public void setReviewLiveData(Review review)
+    {
+        reviewDAO.setReviewLiveData(review);
+    }
+
     public MutableLiveData<ArrayList<Hotel>> getHotelsLiveData()
 
     {
@@ -110,5 +119,23 @@ public class ReviewRepository {
     public LiveData<FirebaseUser> getCurrentUser()
     {
         return userDAO.getCurrentUser();
+    }
+
+    public MutableLiveData<Boolean> getIsLikePressed() {
+        return reviewDAO.getIsLikePressed();
+    }
+
+    public void setIsLikePressed(boolean statement) {
+        reviewDAO.setIsLikePressed(statement);
+    }
+
+    public void removeHotel(Hotel hotel)
+    {
+        reviewDAO.removeHotel(hotel);
+    }
+
+    public User getUserModal(String uid)
+    {
+        return userDAO.getUserModal(uid);
     }
 }

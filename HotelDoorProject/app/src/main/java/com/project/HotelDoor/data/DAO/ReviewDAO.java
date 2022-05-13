@@ -41,9 +41,7 @@ import java.util.TimerTask;
 
 public class ReviewDAO {
     private static ReviewDAO instance;
-    private final Application app;
     private final UserDAO userDAO;
-    private Review review = null;
     private ArrayList<Review> reviewsArrayList = new ArrayList<>();
     private ArrayList<Hotel> hotelsArrayList = new ArrayList<>();
 
@@ -54,10 +52,11 @@ public class ReviewDAO {
     private MutableLiveData<ArrayList<Review>> reviewsLiveData = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<ArrayList<Hotel>> hotelsLiveData = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Hotel> hotel = new MutableLiveData<>(null);
+    private MutableLiveData<Review> review = new MutableLiveData<>();
     private MutableLiveData<String> hotelNameLiveData = new MutableLiveData<>(null);
+    private MutableLiveData<Boolean> isLikePressed = new MutableLiveData<>(false);
 
     public ReviewDAO(Application app) {
-        this.app = app;
         firebaseDatabase = FirebaseFirestore.getInstance();
         userDAO = UserDAO.getInstance(app);
 
@@ -98,6 +97,22 @@ public class ReviewDAO {
         this.hotelNameLiveData.postValue(hotelName);
     }
 
+    public MutableLiveData<Review> getReviewLiveData() {
+        return review;
+    }
+
+    public MutableLiveData<Boolean> getIsLikePressed() {
+        return isLikePressed;
+    }
+
+    public void setIsLikePressed(boolean statement) {
+        this.isLikePressed.postValue(statement);
+    }
+
+    public void setReviewLiveData(Review review) {
+        this.review.setValue(review);
+    }
+
     public void postHotel(Hotel hotel) {
         Map<String, Object> hotelMap = new HashMap<>();
         hotelMap.put("name", hotel.getName());
@@ -110,6 +125,7 @@ public class ReviewDAO {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Hotel inserted successfully!");
+                        isLikePressed.postValue(false);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -118,6 +134,8 @@ public class ReviewDAO {
                         Log.w(TAG, "Error writing the user", e);
                     }
                 });
+
+
     }
 
     public void getHotel(String name) {
@@ -169,6 +187,24 @@ public class ReviewDAO {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error updating user document " + hotelDocument.getId(), e);
                         userDAO.setAuthenticationMessage(true, "Information couldn't be updated.");
+                    }
+                });
+    }
+
+    public void removeHotel(Hotel hotel)
+    {
+        firebaseDatabase.collection("hotels").document(hotel.getName())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Hotel successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
                     }
                 });
     }

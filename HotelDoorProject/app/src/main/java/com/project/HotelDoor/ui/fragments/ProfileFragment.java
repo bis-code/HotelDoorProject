@@ -32,7 +32,6 @@ public class ProfileFragment extends Fragment {
     View emailLayout;
     View isEmailVerifiedLayout;
     Button verifyEmailButton;
-    Button logoutButton;
 
     //User information
     TextView email;
@@ -65,7 +64,6 @@ public class ProfileFragment extends Fragment {
         isEmailVerifiedLayout.setVisibility(View.GONE);
 
         verifyEmailButton = view.findViewById(R.id.buttonVerifyEmail);
-        logoutButton = view.findViewById(R.id.logoutButton);
 
         email = view.findViewById(R.id.updateEmail);
         phone = view.findViewById(R.id.updateMobile);
@@ -97,15 +95,6 @@ public class ProfileFragment extends Fragment {
                 isEmailVerifiedLayout.setVisibility(visibility);
             }
         });
-
-        if (logoutButton != null) {
-            logoutButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mViewModel.logout();
-                }
-            });
-        }
 
         if (verifyEmailButton != null) {
             verifyEmailButton.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +135,7 @@ public class ProfileFragment extends Fragment {
                     username.setText(user.getUserName());
                     myRole.setText(user.getRole().name());
                     //TODO: to be implemented
-                    likes.setText("0");
+                    likes.setText(user.getLikes() + " likes");
                 }
             }
         });

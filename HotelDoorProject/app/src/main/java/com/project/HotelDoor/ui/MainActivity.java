@@ -39,11 +39,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private Stage stage;
-    //TODO: repair bug it does not go back when pressing on create account button on login fragment.
     BottomNavigationView bottomNavigationView;
     BottomAppBar bottomAppBar;
     FloatingActionButton floatingPlus;
-    //TODO: need to add functionality for the bottomNAvigationView so it changes between fragments
 
     private final RegisterFragment registerFragment = new RegisterFragment();
     private final LoginFragment loginFragment = new LoginFragment();

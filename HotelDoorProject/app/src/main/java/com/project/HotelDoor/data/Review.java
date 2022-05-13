@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Review {
-//    public ArrayList<Comment> comments;
     public String userUID;
     public String description;
     public float rate;
     public int likes;
     private String hotelName;
+    private int uniqID;
 
-    public Review(String hotelName, String userUID, String description, float rate, int likes) {
-//        this.comments = new ArrayList<>();
+    public Review(String hotelName, String userUID, String description, float rate, int likes, int uniqID) {
+
         this.userUID = userUID;
         this.description = description;
         this.rate = rate;
@@ -64,6 +64,14 @@ public class Review {
 
     public String getDescription() {
         return description;
+    }
+
+    public int getUniqID() {
+        return uniqID;
+    }
+
+    public void setUniqID(int uniqID) {
+        this.uniqID = uniqID;
     }
 
     public void setDescriptions(String description) {

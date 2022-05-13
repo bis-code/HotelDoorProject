@@ -12,6 +12,7 @@ public class User {
     private int numberAddress;
     private String phone;
     private Role role;
+    private int likes;
 
     public User(String uid, String userName) {
         this.uid = uid;
@@ -23,9 +24,10 @@ public class User {
         numberAddress = -1;
         phone = null;
         role = Role.MEMBER;
+        likes = 0;
     }
 
-    public User(Role role, String uid, String userName, String email, String phone, int reviews, String fullName, String streetAddress, int numberAddress) {
+    public User(Role role, String uid, String userName, String email, String phone, int reviews, String fullName, String streetAddress, int numberAddress, int likes) {
         this.uid = uid;
         this.userName = userName;
         this.phone = phone;
@@ -35,6 +37,7 @@ public class User {
         this.streetAddress = streetAddress;
         this.numberAddress = numberAddress;
         this.role = role;
+        this.likes = likes;
     }
 
     public User()
@@ -111,6 +114,14 @@ public class User {
 
     public void setNumberAddress(int numberAddress) {
         this.numberAddress = numberAddress;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     @Override

@@ -55,7 +55,18 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         holder.desctv.setText(modal.getDescription());
         holder.likeTV.setText("" + modal.getLikes() + " likes");
         holder.hotelName.setText("About " + modal.getHotelName() + " hotel");
-//        Picasso.get().load(modal.getAuthor_url()).into(holder.authorIV);
+
+        //TODO: problem the method is called continously after first click
+        holder.likeReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int likesUpdated = modal.getLikes() + 1;
+                modal.setLikes(likesUpdated);
+                holder.likeTV.setText(String.valueOf(modal.getLikes()));
+                reviewRepository.setReviewLiveData(modal);
+                reviewRepository.setIsLikePressed(true);
+            }
+        });
     }
 
     @Override
@@ -70,6 +81,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         private TextView likeTV;
         private TextView desctv;
         private TextView hotelName;
+        public ImageView likeReview;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +90,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             likeTV = itemView.findViewById(R.id.likesReview);
             desctv = itemView.findViewById(R.id.reviewDescription);
             hotelName = itemView.findViewById(R.id.hotelName);
+            likeReview = itemView.findViewById(R.id.likeReview);
+
         }
     }
 }

@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardElevation="10dp"
+        android:foregroundGravity="center"
         app:cardCornerRadius="20dp"
         android:layout_margin="10dp"
         app:cardBackgroundColor="@color/white"
@@ -18,42 +20,33 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="3dp">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_email" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Email"
+                    android:gravity="center"
+                    android:text="To logout: "
                     android:textColor="#605E5E"
                     android:textSize="14sp"
                     android:textStyle="bold" />
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/updateEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginBottom="15dp"
-                android:text="not_set@gmail.com"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                <Button
+                    android:id="@+id/logoutButton"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="LOGOUT" />
+            </LinearLayout>
         </LinearLayout>
 
 

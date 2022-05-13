@@ -25,6 +25,7 @@ import com.project.HotelDoor.viewmodel.PostReviewViewModel;
 import com.project.HotelDoor.R;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PostReviewFragment extends Fragment {
 
@@ -67,17 +68,28 @@ public class PostReviewFragment extends Fragment {
                 if (postReviewViewModel.getCurrentUser().getValue() != null) {
                     postReviewViewModel.getHotel(inputHotelName.getText().toString());
                     postReviewViewModel.getHotelLiveData().observe(getViewLifecycleOwner(), hotel -> {
+                        Random randomNumber = new Random();
+                        int uniqueNumber = randomNumber.nextInt(100000) + 1;
                         Review review;
                         if(hotel != null)
                         {
-                                review = new Review(hotel.getName(),postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(), 0);
+                                review = new Review(hotel.getName(),
+                                        postReviewViewModel.getCurrentUser().getValue().getUid(),
+                                        reviewDescription.getText().toString(),
+                                        ratingReviewBar.getRating(), 0,uniqueNumber);
+
                                 hotel.getReviews().add(review);
                                 postReviewViewModel.updateHotel(hotel);
                         }
                         else {
                             Hotel newHotel = new Hotel(inputHotelAddress.getText().toString(), inputHotelName.getText().toString(), new ArrayList<Review>());
-                            review = new Review(newHotel.getName(),postReviewViewModel.getCurrentUser().getValue().getUid(), reviewDescription.getText().toString(), ratingReviewBar.getRating(), 0);
+
+                            review = new Review(newHotel.getName(),
+                                    postReviewViewModel.getCurrentUser().getValue().getUid(),
+                                    reviewDescription.getText().toString(),
+                                    ratingReviewBar.getRating(), 0, uniqueNumber);
                             newHotel.getReviews().add(review);
+
                             postReviewViewModel.postHotel(newHotel);
                         }
                         //verify reviews post by user

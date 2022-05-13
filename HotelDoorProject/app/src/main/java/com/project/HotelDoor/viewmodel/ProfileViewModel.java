@@ -43,9 +43,4 @@ public class ProfileViewModel extends AndroidViewModel {
         userRepository.verifyEmail();
     }
 
-    public void logout()
-    {
-        userRepository.signOut();
-    }
-
 }
