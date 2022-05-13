@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.project.HotelDoor.R;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         revFeed = view.findViewById(R.id.idReviewFeeds);
         revFeed.hasFixedSize();
+        reviewsArrayList = new ArrayList<>();
         return view;
     }
 
@@ -52,10 +54,14 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        mViewModel.getReviewsLiveData().observe(getViewLifecycleOwner(), reviews -> {
-            if(!reviews.isEmpty()){
+        loadReviewData();
+        mViewModel.getHotelsLiveData().observe(getViewLifecycleOwner(), hotels -> {
+            for(Hotel hotel : hotels) {
+                reviewsArrayList.addAll(hotel.getReviews());
+            }
+            if(!reviewsArrayList.isEmpty()){
                 try{
-                    ReviewAdapter adapter = new ReviewAdapter(reviews, getContext(), getActivity().getApplication());
+                    ReviewAdapter adapter = new ReviewAdapter(reviewsArrayList, getContext(), getActivity().getApplication());
 
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
 
@@ -70,12 +76,13 @@ public class HomeFragment extends Fragment {
                     Log.e(TAG, "Error getting reviews data: " + e.getMessage());
                 }
             }
-        });
-        loadReviewData();
+            });
+
+
     }
 
     public void loadReviewData() {
-        mViewModel.getReviews();
+        mViewModel.getHotels();
     }
 
 }

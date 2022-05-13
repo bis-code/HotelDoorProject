@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.view.View;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseUser;
 import com.project.HotelDoor.data.DAO.UserDAO;
 
@@ -89,5 +92,15 @@ public class UserRepository {
     public User getUserModal(String uid)
     {
         return userDAO.getUserModal(uid);
+    }
+
+
+    public void firebaseAuthWithGoogle(boolean isRegister,GoogleSignInAccount account, FragmentActivity activity) {
+        userDAO.firebaseAuthWithGoogle(isRegister,account, activity);
+    }
+
+    public void updateRole(Role role)
+    {
+        userDAO.updateRole(role);
     }
 }

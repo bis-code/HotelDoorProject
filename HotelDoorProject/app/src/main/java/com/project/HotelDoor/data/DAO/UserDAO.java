@@ -6,22 +6,30 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -135,38 +143,50 @@ public class UserDAO {
     }
 
     public void registerAccount(Activity activity, String email, String password) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success
-                            Log.d(TAG, "createUserWithEmail:success");
-                            authenticationMessage.postValue("User created!");
-                            createUser(getCurrentUser().getValue().getUid(), email);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            authenticationMessage.postValue("Error on creating user");
+        try{
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success
+                                Log.d(TAG, "createUserWithEmail:success");
+                                authenticationMessage.postValue("User created!");
+                                createUser(getCurrentUser().getValue().getUid(), email);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                authenticationMessage.postValue("Error on creating user");
+                            }
                         }
-                    }
-                });
-        signOut.postValue(false);
+                    });
+            signOut.postValue(false);
+        }
+        catch (Exception e)
+        {
+            authenticationMessage.postValue("Exception: " + e.getMessage());
+        }
     }
 
     public void loginAccount(Activity activity, String email, String password) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, task -> {
-                    if (task.isSuccessful()) {
-                        //Sign in success
-                        Log.d(TAG, "signInUserWithEmail:success");
-                        authenticationMessage.postValue("You are signed in!");
-                    } else {
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        authenticationMessage.postValue("Error on signing in");
-                    }
-                });
-        signOut.postValue(false);
+        try{
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(activity, task -> {
+                        if (task.isSuccessful()) {
+                            //Sign in success
+                            Log.d(TAG, "signInUserWithEmail:success");
+                            authenticationMessage.postValue("You are signed in!");
+                        } else {
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            authenticationMessage.postValue("Error on signing in");
+                        }
+                    });
+            signOut.postValue(false);
+        }
+        catch (Exception e)
+        {
+            authenticationMessage.postValue("Exception: " + e.getMessage());
+        }
     }
 
     public void forgotPassword(View view) {
@@ -211,7 +231,7 @@ public class UserDAO {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("uid", uid);
-        user.put("reviews", new ArrayList<Review>());
+        user.put("reviews", 0);
         user.put("userName", "Not set");
         user.put("fullName", "Not set");
         user.put("streetAddress", "Not set");
@@ -235,7 +255,6 @@ public class UserDAO {
     }
 
     public void updateUserInformation(String userName, String fullName, String phone, String streetAddress, String numberStreet) {
-        DocumentReference userDocument = firebaseDatabase.collection("users").document(firebaseAuth.getCurrentUser().getUid());
         int numberOfStreet = Integer.parseInt(numberStreet);
         if(userName != null)
         {
@@ -256,12 +275,14 @@ public class UserDAO {
         }
     }
 
-    public void updateRole(Role role)
-    {
-        switch (role)
-        {
-            case ADMIN : updateUser("role",Role.ADMIN); break;
-            case MEMBER : updateUser("role",Role.MEMBER); break;
+    public void updateRole(Role role) {
+        switch (role) {
+            case ADMIN:
+                updateUser("role", Role.ADMIN);
+                break;
+            case MEMBER:
+                updateUser("role", Role.MEMBER);
+                break;
         }
     }
 
@@ -277,38 +298,6 @@ public class UserDAO {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Document User with " + userDocument.getId() + " has been updated");
                         authenticationMessage.postValue("Information has been updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating user document " + userDocument.getId(), e);
-                        authenticationMessage.postValue("Information couldn't be updated.");
-                    }
-                });
-    }
-
-    public void updateUserReviews(Review review) {
-        DocumentReference userDocument = firebaseDatabase.collection("users").document(review.getUserUID());
-        setUser(review.getUserUID());
-        User user = this.user.getValue();
-        ArrayList<Review> userReviews = null;
-        if (user.getReviews() != null) {
-            userReviews = user.getReviews();
-        } else {
-            userReviews = new ArrayList<>();
-        }
-        userReviews.add(review);
-
-        userDocument
-                .update(
-                        "reviews", userReviews
-                )
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Document User with " + userDocument.getId() + " has been updated");
-                        authenticationMessage.postValue("Reviews has been updated!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -392,4 +381,26 @@ public class UserDAO {
     }
 
 
+    public void firebaseAuthWithGoogle(boolean isRegister, GoogleSignInAccount account, FragmentActivity activity) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        firebaseAuth.signInWithCredential(credential).
+                addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful())
+                        {
+                            authenticationMessage.postValue("Authentication successful!");
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if(user != null && isRegister)
+                            {
+                                createUser(user.getUid(),user.getEmail());
+                            }
+                        }
+                        else{
+                            authenticationMessage.postValue("Authentication failed!");
+                            Log.e(TAG,"Google: " + task.getException());
+                        }
+                    }
+                });
+    }
 }

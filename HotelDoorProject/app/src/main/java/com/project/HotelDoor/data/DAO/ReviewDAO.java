@@ -42,7 +42,6 @@ import java.util.TimerTask;
 public class ReviewDAO {
     private static ReviewDAO instance;
     private final Application app;
-    private boolean statement;
     private final UserDAO userDAO;
     private Review review = null;
     private ArrayList<Review> reviewsArrayList = new ArrayList<>();
@@ -61,6 +60,7 @@ public class ReviewDAO {
         this.app = app;
         firebaseDatabase = FirebaseFirestore.getInstance();
         userDAO = UserDAO.getInstance(app);
+
         getHotels();
         getReviews();
     }
@@ -182,7 +182,7 @@ public class ReviewDAO {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Hotel hotel = document.toObject(Hotel.class);
                             hotelsArrayList.add(hotel);
-                            hotelsLiveData.postValue(hotelsArrayList);
+
 //                            firebaseDatabase.collection("hotels").document(hotel.getName()).
 //                                    get().addOnCompleteListener(taskListener -> {
 //                                        if(taskListener.isSuccessful())
@@ -192,6 +192,7 @@ public class ReviewDAO {
 //                                        }
 //                                    });
                         }
+                        hotelsLiveData.postValue(hotelsArrayList);
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
@@ -199,6 +200,7 @@ public class ReviewDAO {
     }
 
     public void getReviews() {
+        getHotels();
         firebaseDatabase.collection("hotels")
                 .get()
                 .addOnCompleteListener(task -> {
