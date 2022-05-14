@@ -35,7 +35,6 @@ public class ProfileFragment extends Fragment {
 
     //User information
     TextView email;
-    TextView myReviews;
     TextView addInformationText;
     ImageView addInformation;
     TextView phone;
@@ -70,7 +69,6 @@ public class ProfileFragment extends Fragment {
         address = view.findViewById(R.id.updateAddress);
         username = view.findViewById(R.id.updateUsername);
         name = view.findViewById(R.id.updateName);
-        myReviews = view.findViewById(R.id.myReviews);
         addInformationText = view.findViewById(R.id.addInformationText);
         addInformation = view.findViewById(R.id.addInformation);
         myRole = view.findViewById(R.id.myRole);
@@ -104,13 +102,6 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
-
-        myReviews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: another fragment where it shows reviews created so far.
-            }
-        });
 
         mViewModel.getCurrentUser().observe(getViewLifecycleOwner(), new Observer<FirebaseUser>() {
             @Override

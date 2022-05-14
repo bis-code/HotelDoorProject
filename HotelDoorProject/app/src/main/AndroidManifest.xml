@@ -19,6 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelDoorProject"
         android:usesCleartextTraffic="true">
+
+        <uses-library android:name="com.google.android.maps" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAEDKVOM85MRSmD4qF3J2p-thDQV91N74s" />
