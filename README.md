@@ -27,7 +27,8 @@ In the last time I was browsing Glassdor and Booking. I was using Glassdor for s
 ✅ 17.  As a user, I want to have my role displayed on the profile page such that I would know how much reviews I have to post more until I get the next role.
 ✅ 18.  As a user, I want to see the information regarding the user's role and how can I advance to the next role. 
 
-
+## YouTube LINK:
+# https://youtu.be/0jjswjzEN2U
 ## Other links:
 # Jira: https://hoteldoor.atlassian.net/jira/software/c/projects/HOT/boards/1?selectedIssue=HOT-16
 # References:
