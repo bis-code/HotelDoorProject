@@ -23,7 +23,7 @@
         <uses-library android:name="com.google.android.maps" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAEDKVOM85MRSmD4qF3J2p-thDQV91N74s" />
+            android:value="AIzaSyAbzG6W1rB1aVHmciwg05vJ9jVG4QsV8ho" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">

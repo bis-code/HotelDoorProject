@@ -88,25 +88,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
             mViewModel.getHotelsLiveData().observe(getViewLifecycleOwner(), hotels ->
             {
-                for(Hotel hotel : hotels)
+                if(hotels.size() > 0)
                 {
-                    List<Address> addressList = null;
-                    try {
-                        addressList = geocoder.getFromLocationName(hotel.getAddress(),1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    for(Hotel hotel : hotels)
+                    {
+                        List<Address> addressList = null;
+                        try {
+                            addressList = geocoder.getFromLocationName(hotel.getAddress(),1);
 
-                    if(addressList != null && addressList.size() > 0)
-                        {
-                            Address address = addressList.get(0);
-                            LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(hotel.getName()));
+                            if(addressList != null && addressList.size() > 0)
+                            {
+                                Address address = addressList.get(0);
+                                LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+                                googleMap.addMarker(new MarkerOptions().position(latLng).title(hotel.getName()));
 
-                            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
+                                googleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
 
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            }
+                        } catch (IOException e) {
+                            Toast.makeText(getContext(), "Location not found for hotel: " + hotel.getName(), Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
                         }
+                    }
                 }
             });
         }
