@@ -84,10 +84,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onChanged(Boolean isSignInPressed) {
                         if (isSignInPressed) {
-                            stage.setStage("login");
                             getSupportFragmentManager().beginTransaction().replace(R.id.navigationFragment, loginFragment).commit();
                         } else {
-                            stage.setStage("register");
                             getSupportFragmentManager().beginTransaction().replace(R.id.navigationFragment, registerFragment).commit();
                         }
                     }
@@ -165,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().
                 beginTransaction().
                 replace(R.id.navigationFragment, homeFragment).commit();
-        //TODO: to make such that when it goes back to home the navigation drawer is set to home item.
     }
 
     public void cancelPostingReview(View view) {
@@ -175,11 +172,4 @@ public class MainActivity extends AppCompatActivity {
                 commit();
 
     }
-
-
-//    public void clickProfile(MenuItem item)
-//    {
-//        stage.setStage("profile");
-//        startActivity();
-//    }
 }

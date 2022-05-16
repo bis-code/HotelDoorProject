@@ -35,11 +35,6 @@ public class HomeViewModel extends AndroidViewModel {
         reviewRepository.getHotels();
     }
 
-    public void getReviews()
-    {
-        reviewRepository.getReviews();
-    }
-
     public MutableLiveData<ArrayList<Hotel>> getHotelsLiveData()
     {
         return reviewRepository.getHotelsLiveData();

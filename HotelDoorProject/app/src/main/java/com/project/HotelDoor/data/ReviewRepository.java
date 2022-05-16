@@ -67,11 +67,6 @@ public class ReviewRepository {
         reviewDAO.getHotels();
     }
 
-    public void getReviews()
-    {
-        reviewDAO.getReviews();
-    }
-
     public MutableLiveData<Review> getReviewLiveData() {
         return reviewDAO.getReviewLiveData();
     }

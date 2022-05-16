@@ -59,9 +59,6 @@ public class ReviewDAO {
     public ReviewDAO(Application app) {
         firebaseDatabase = FirebaseFirestore.getInstance();
         userDAO = UserDAO.getInstance(app);
-
-        getHotels();
-        getReviews();
     }
 
     public static ReviewDAO getInstance(Application application) {
@@ -211,6 +208,7 @@ public class ReviewDAO {
 
     public void getHotels()
     {
+        hotelsArrayList.clear();
         firebaseDatabase.collection("hotels")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -218,42 +216,8 @@ public class ReviewDAO {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Hotel hotel = document.toObject(Hotel.class);
                             hotelsArrayList.add(hotel);
-
-//                            firebaseDatabase.collection("hotels").document(hotel.getName()).
-//                                    get().addOnCompleteListener(taskListener -> {
-//                                        if(taskListener.isSuccessful())
-//                                        {
-//                                            reviewsArrayList.addAll(hotel.getReviews());
-//                                            reviewsLiveData.postValue();
-//                                        }
-//                                    });
                         }
                         hotelsLiveData.postValue(hotelsArrayList);
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
-    }
-
-    public void getReviews() {
-        getHotels();
-        firebaseDatabase.collection("hotels")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Hotel hotel = document.toObject(Hotel.class);
-                            hotelsArrayList.add(hotel);
-                            hotelsLiveData.postValue(hotelsArrayList);
-                            firebaseDatabase.collection("hotels").document(hotel.getName()).
-                                    get().addOnCompleteListener(taskListener -> {
-                                        if(taskListener.isSuccessful())
-                                        {
-                                            reviewsArrayList.addAll(hotel.getReviews());
-                                            reviewsLiveData.postValue(reviewsArrayList);
-                                        }
-                                    });
-                        }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }

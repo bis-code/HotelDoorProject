@@ -56,7 +56,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         holder.likeTV.setText("" + modal.getLikes() + " likes");
         holder.hotelName.setText("About " + modal.getHotelName() + " hotel");
 
-        //TODO: problem the method is called continously after first click
         holder.likeReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

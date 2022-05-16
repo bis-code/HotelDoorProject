@@ -82,24 +82,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        try{
+        try {
             this.googleMap = googleMap;
+            googleMap.moveCamera(CameraUpdateFactory.zoomTo(10.0f));
             mViewModel.getHotels();
-            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
             mViewModel.getHotelsLiveData().observe(getViewLifecycleOwner(), hotels ->
             {
-                if(hotels.size() > 0)
-                {
-                    for(Hotel hotel : hotels)
-                    {
-                        List<Address> addressList = null;
+                if (hotels.size() > 0) {
+                    Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
+                    for (Hotel hotel : hotels) {
                         try {
-                            addressList = geocoder.getFromLocationName(hotel.getAddress(),1);
-
-                            if(addressList != null && addressList.size() > 0)
-                            {
+                            List<Address> addressList = geocoder.getFromLocationName(hotel.getAddress(), 1);
+                            if (addressList != null && addressList.size() > 0) {
                                 Address address = addressList.get(0);
-                                LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+                                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                                 googleMap.addMarker(new MarkerOptions().position(latLng).title(hotel.getName()));
 
                                 googleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
@@ -113,9 +109,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     }
                 }
             });
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Toast.makeText(getActivity(), "An error appeared: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
@@ -123,14 +117,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                CameraUpdate zoom  = CameraUpdateFactory.newLatLngZoom(marker.getPosition(),20);
+                CameraUpdate zoom = CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 20);
                 googleMap.moveCamera(zoom);
 
                 mViewModel.getHotel(marker.getTitle());
 
                 mViewModel.getHotelLiveData().observe(getViewLifecycleOwner(), hotel -> {
-                    if(hotel != null)
-                    {
+                    if (hotel != null) {
                         numberOfReviews.setText("Reviews: " + hotel.getReviews().size());
                         addressOfHotel.setText("Address: " + hotel.getAddress());
                         detailsHotel.setVisibility(View.VISIBLE);
